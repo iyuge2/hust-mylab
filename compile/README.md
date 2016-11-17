@@ -1,8 +1,8 @@
     The compile is designed for C--
 word analyse file:
-    word.analyse.l (compile by flex)
+    word.analyse.l (compiled by flex)
 gramma parser file:
-    syntax.y (compile by bison)
+    syntax.y (compiled by bison)
 creat gramma-tree file:
     syntaxTree.h
     syntaxTree.c
