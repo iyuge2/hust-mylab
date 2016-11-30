@@ -1,0 +1,9 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/iyuge2/Study/NumLogicWork/Elevator/Elevator.sim/sim_1/synth/timing/Main_tb_time_synth.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ChangeState
+INFO: [VRFC 10-311] analyzing module DLCK_1s
+INFO: [VRFC 10-311] analyzing module Main
+INFO: [VRFC 10-311] analyzing module Print
+INFO: [VRFC 10-311] analyzing module SevenSegNumIndic
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/iyuge2/Study/NumLogicWork/Elevator/Elevator.srcs/sim_1/new/Main_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Main_tb

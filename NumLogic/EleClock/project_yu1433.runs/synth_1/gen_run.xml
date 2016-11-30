@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="synth_1" LaunchPart="xa7a100tcsg324-1I" LaunchTime="1475052172">
+  <File Type="PA-TCL" Name="Main.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="Main_drc_synth.rpt"/>
+  <File Type="RUN-SRCS" Name="$PDATADIR/runs/synth_1/sources.xml"/>
+  <File Type="RDS-UTIL-PB" Name="Main_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="Main.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="Main_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="Main_timing_summary_synth.pb"/>
+  <File Type="RDS-RDS" Name="Main.vds"/>
+  <File Type="RDS-UTIL" Name="Main_utilization_synth.rpt"/>
+  <File Type="RUN-CONSTRS" Name="$PDATADIR/runs/synth_1/constrs_in.xml"/>
+  <File Type="RUN-STRAT" Name="$PDATADIR/runs/synth_1/synth_1.psg"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PSRCDIR/sources_1/new/Count.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/Count.v"/>
+        <Attr Name="ImportTime" Val="1474703256"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/SevenSeg.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/SevenSeg.v"/>
+        <Attr Name="ImportTime" Val="1474702296"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/segTime.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/segTime.v"/>
+        <Attr Name="ImportTime" Val="1474701144"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/RING.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/RING.v"/>
+        <Attr Name="ImportTime" Val="1474709318"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/DCLK_1.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/DCLK_1.v"/>
+        <Attr Name="ImportTime" Val="1474701118"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/DCLK_05.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/DCLK_05.v"/>
+        <Attr Name="ImportTime" Val="1474701162"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/CLOCK_S.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_S.v"/>
+        <Attr Name="ImportTime" Val="1474658780"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/CLOCK_M.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_M.v"/>
+        <Attr Name="ImportTime" Val="1474658754"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/CLOCK_H.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_H.v"/>
+        <Attr Name="ImportTime" Val="1474658758"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/PRINT.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/PRINT.v"/>
+        <Attr Name="ImportTime" Val="1474685706"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Clock_loud.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Main.v">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/Main.v"/>
+        <Attr Name="ImportTime" Val="1474709360"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="Main"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PSRCDIR/constrs_1/new/ConMain.xdc">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../project_Clock/project_Clock.srcs/constrs_1/new/ConMain.xdc"/>
+        <Attr Name="ImportTime" Val="1475033878"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2015"/>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>
