@@ -10,6 +10,8 @@ struct Temp1{
     float j;
 };
 
+struct Temp1 temp;
+int temp;
 struct Temp2{
     int i;
     float j;
