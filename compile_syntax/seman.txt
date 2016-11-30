@@ -1,0 +1,38 @@
+
+>>函数符号表<<
+
+[[1]]
+返回类型struct Temp1
+函数名>>main
+形参>>无!
+>Local Var<
+[1]>> <int i>
+[2]>> <float 3 j>
+[3]>> <float 1 m>
+[4]>> <struct Temp1 t1>
+[5]>> <struct Temp2 t2>
+
+[[2]]
+返回类型int
+函数名>>func
+形参>> <int i>>Local Var<
+[6]>> <int m>
+
+>>结构符号表<<
+
+[[1]]
+结构名>> Temp1
+结构成员>> <int i> <int m> <float j>
+
+[[2]]
+结构名>> Temp2
+结构成员>> <int i> <float j>
+
+[[3]]
+结构名>> 0
+结构成员>> <int mk>
+
+>>全局变量符号表<<
+[1] <float m>
+[2] <struct 0 test>
+[3] <struct 0 2 test>

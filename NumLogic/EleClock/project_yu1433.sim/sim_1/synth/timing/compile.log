@@ -1,0 +1,17 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/iyuge2/Study/NumLogicWork/EleClock_update/EleClock_update.sim/sim_1/synth/timing/Main_tb_time_synth.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module CLOCK_H
+INFO: [VRFC 10-311] analyzing module CLOCK_M
+INFO: [VRFC 10-311] analyzing module CLOCK_S
+INFO: [VRFC 10-311] analyzing module Count
+INFO: [VRFC 10-311] analyzing module Count_0
+INFO: [VRFC 10-311] analyzing module Count__parameterized0
+INFO: [VRFC 10-311] analyzing module DCLK_05
+INFO: [VRFC 10-311] analyzing module DCLK_1
+INFO: [VRFC 10-311] analyzing module Main
+INFO: [VRFC 10-311] analyzing module Print
+INFO: [VRFC 10-311] analyzing module RING
+INFO: [VRFC 10-311] analyzing module SevenSegNumIndic
+INFO: [VRFC 10-311] analyzing module segTime
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/iyuge2/Study/NumLogicWork/EleClock_update/EleClock_update.srcs/sim_1/new/Main_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Main_tb
