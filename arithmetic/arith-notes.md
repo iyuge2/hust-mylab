@@ -1,7 +1,7 @@
 #<center>arithmetic-notes   
 本文档主要记录自己在学习算法时看到的一些比较好的ideas && thinking processsing  
 ##目录
-*	####求解最大公约数  
+*	求解最大公约数  
 
 #####**求解最大公约数**  
 ######[更减相损术](./Grater-comman-divisor/more-phase-impairment.cc)
