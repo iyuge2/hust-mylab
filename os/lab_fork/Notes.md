@@ -69,5 +69,5 @@ signal函数用于设置信号,表示如果接收到某信号时,该采取什么
            (2) FILE fd; fd = fopen(...); sprintf(fd,"hello world!\n");
          与之对应的函数是fscanf;  
          与printf和scanf函数用法类似,只是增加了文件重定向指针.  
-###未完待续  
-###[返回目录](#目录)  
+###[返回目录](#目录) 
+###[未完待续](../os-notes.md) 
