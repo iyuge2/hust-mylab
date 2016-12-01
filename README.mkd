@@ -53,7 +53,7 @@
         所以,本实验中,由于在fork之前设置了软中断信息,所以在子进程调用的函数中应该忽略软中断信息--signal(SIGINT,SIG_IGN);  
     注: 终止或停止信号(SIGKILL和SIGSTOP)是不能忽略的!  
         所以,当碰到僵尸进程时,可以在另一个终端中利用kill命令将其杀死.  
-####*3.[数据的传递--管道pipe](#readme)*  
+####*3.[数据的传递--管道pipe](https://github.com/iyuge2/hust-mylab/os/fork_lab/README.txt)*  
         int pipefd[2];  
         pipe(pipefd);  
         上面两行代码将会创建一个无名管道,返回两个管道描述符,读描述符--pipefd[0] && 写描述符--pipefd[1].  
