@@ -1,4 +1,4 @@
-    ####hello
-    ###iyuge2
-    ##hello `world`
-    ___bold___
+#<center>os-lab-notes  
+###进程的创建与进程之间通信  
+    本次实验中,涉及了Linux环境下子进程的创建(fork),父子进程之间信号的传(signal)以及兄弟进程之间数据的传递(管道)  
+    
