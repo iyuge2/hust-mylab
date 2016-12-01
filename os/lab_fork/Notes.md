@@ -34,6 +34,7 @@ exec函数族中包括六个函数:(path-->文件路径)
             int execvp(const char*file,char* const argv[]);  
             int execve(const char*path,char*const argv[],char*const envp[]);  
  exec用被执行的程序替换调用它的程序,与fork的区别是:fork创建一个新的进程,产生一个新的PID;exec启动一个新程序,替换原有的进程,因此进程的PID不会改变.两者经常搭配使用. 如一个进程希望执行另一个程序时,就可以先利用fork函数创建出一个新进程,然后调用任何一个exec函数执行希望执行的那个程序.  
+ 
 ####*进程的等待*  
 进程的等待用到的函数是wait,也可以用waitpid.对于两者的用法可以直接man一下. 对于函数wait,其原型为int wait(int*status);当父进程调用此函数时,父进程将会一直等待,一直到有一个子进程结束为止,然后, 将子进程结束的转态用status返回.  
         -->若当前进程没有任何子进程时,该函数返回-1.  
