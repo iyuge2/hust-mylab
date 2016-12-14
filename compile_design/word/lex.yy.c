@@ -408,10 +408,10 @@ static yyconst flex_int16_t yy_accept[89] =
         0,    0,    0,    0,   38,   35,   19,   20,   28,   15,
        35,   29,   30,   13,   11,   22,   12,   27,   14,   16,
        16,   21,   24,   23,   24,   18,   31,   32,   18,   18,
-       18,   18,   18,   18,   33,   35,   34,    3,   37,    3,
-       19,   24,   25,    0,    1,    4,    0,   16,    0,    0,
+       18,   18,   18,   18,   33,   35,   34,    4,   37,    4,
+       19,   24,   25,    0,    2,    1,    0,   16,    0,    0,
         0,   16,   16,   36,   36,   18,   18,   18,    7,   18,
-       18,   18,   18,   26,    2,    4,   17,    0,   17,   16,
+       18,   18,   18,   26,    3,    1,   17,    0,   17,   16,
        17,   18,   18,    5,   18,   18,   18,    6,   18,   18,
        18,   18,   18,   18,    9,    8,   10,    0
     } ;
@@ -573,8 +573,8 @@ char *yytext;
 #line 8 "word.analyse.l"
 #include<stdio.h>
 #include<stdlib.h>
-#include"syntaxTree.h"
-#include"syntax.tab.h"
+#include"../syntax/syntaxTree.h"
+#include"../syntax/syntax.tab.h"
 extern int WordToggle;
 extern FILE* fword;
 int tokennum = 0;
@@ -876,22 +876,22 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 60 "word.analyse.l"
-{BEGIN COMMENT;if(WordToggle) fputs("COMMENTS",fword);}
+{if(WordToggle) fputs("COMMENTS",fword);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 61 "word.analyse.l"
-{BEGIN INITIAL;}
+{BEGIN COMMENT;if(WordToggle) fputs("COMMENTS",fword);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 62 "word.analyse.l"
-{}
+{BEGIN INITIAL;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 63 "word.analyse.l"
-{if(WordToggle) fputs("COMMENTS",fword);}
+{}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP

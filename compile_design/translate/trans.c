@@ -7,6 +7,7 @@ int tIdNum = 0;//存放变量的临时编号
 int labelNum = 1;//存放标签号
 _pFuncTable currFunc = NULL;
 _pLabelList currentLabel = NULL;
+_ArrayLat tempLat;
 
 void translate()
 {
@@ -159,11 +160,9 @@ void translate_exp(GrammaNode* currentNode)
                 GrammaNode* tempNode = currentNode->lchild;
                 switch(currentNode->rulenum){
                     case 1://Exp ASSIGNOP Exp
-                        if(tempNode->rulenum == 17){
-                            translate_exp(tempNode);
-                            translate_exp(tempNode->rchild->rchild);
-                            fprintf(ftrans,"%s := %s\n",tempNode->trans,tempNode->rchild->rchild->trans);
-                        }
+                        translate_exp(tempNode);
+                        translate_exp(tempNode->rchild->rchild);
+                        fprintf(ftrans,"%s := %s\n",tempNode->trans,tempNode->rchild->rchild->trans);
                         return;
                     case 2://Exp AND Exp
                         translate_exp(tempNode);
@@ -252,6 +251,12 @@ void translate_exp(GrammaNode* currentNode)
                         sprintf(currentNode->trans,"t%d",tNum++);
                         break;
                     case 15://Exp LB Exp RB
+                        translate_exp(tempNode);
+                        translate_exp(tempNode->rchild->rchild);
+                        if(tempNode->type == -1){
+                            fprintf(ftrans,"t%d := *%s\n",tNum++,tempNode->trans);
+                        }
+                        return;
                     case 16://Exp DOT ID
                     case 17://ID
                         tIdNum = GetVarNum(tempNode->idType);
@@ -261,14 +266,16 @@ void translate_exp(GrammaNode* currentNode)
                         else{
                             sprintf(currentNode->trans,"gv%d",tIdNum);
                         }
+                        currentNode->type = -1;
                         break;
                     case 18://INT
-                        fprintf(ftrans,"t%d := #%d\n",tNum,tempNode->integer);
-                        sprintf(currentNode->trans,"t%d",tNum++);
+                        //fprintf(ftrans,"t%d := #%d\n",tNum,tempNode->integer);
+                        sprintf(currentNode->trans,"#%d",tempNode->integer);
+                        currentNode->integer = tempNode->integer;
                         break;
                     case 19://FLOAT
-                        fprintf(ftrans,"t%d := #%.2f\n",tNum,tempNode->fnum);
-                        sprintf(currentNode->trans,"t%d",tNum++);
+                        //fprintf(ftrans,"t%d := #%.2f\n",tNum,tempNode->fnum);
+                        sprintf(currentNode->trans,"#%.2f",tempNode->fnum);
                         break;
                 }
             }
@@ -338,13 +345,20 @@ int deleteALabel()
 }
 
 /*
- * 查询符号表,返回变量的编号
+ * 查询符号表,返回变量的编号,如果是数组,还返回数组的维数以及下标
  * */
 int GetVarNum(char* id)
 {
+    int i = 0;
     _pVarTable tVar = currFunc->paraHead;
     while(tVar){
         if(!strcmp(id,tVar->id)){//在形参中找到该编号
+            if(tVar->type->kind == 2 || tVar->type->kind == 4){
+                tempLat.lat = tVar->type->typeSys.array.lat;
+                for(i = 0; i <tempLat.lat;++i){
+                    tempLat.size[i] = tVar->type->typeSys.array.size[i];
+                }
+            }
             return tVar->num;
         }
         tVar = tVar->next;
@@ -352,6 +366,12 @@ int GetVarNum(char* id)
     tVar = currFunc->localHead;
     while(tVar){
         if(!strcmp(id,tVar->id)){//在局部变量中找到该编号
+            if(tVar->type->kind == 2 || tVar->type->kind == 4){
+                tempLat.lat = tVar->type->typeSys.array.lat;
+                for(i = 0; i <tempLat.lat;++i){
+                    tempLat.size[i] = tVar->type->typeSys.array.size[i];
+                }
+            }
             return tVar->num;
         }
         tVar = tVar->next;
@@ -360,6 +380,12 @@ int GetVarNum(char* id)
     tVar = HashHead[hash].varHead;
     while(tVar){
         if(!strcmp(id,tVar->id)){//在全局变量中找到该编号
+            if(tVar->type->kind == 2 || tVar->type->kind == 4){
+                tempLat.lat = tVar->type->typeSys.array.lat;
+                for(i = 0; i <tempLat.lat;++i){
+                    tempLat.size[i] = tVar->type->typeSys.array.size[i];
+                }
+            }
             return tVar->num;
         }
         tVar = tVar->next;

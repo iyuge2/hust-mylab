@@ -7,8 +7,8 @@
 %{
 #include<stdio.h>
 #include<stdlib.h>
-#include"syntaxTree.h"
-#include"syntax.tab.h"
+#include"../syntax/syntaxTree.h"
+#include"../syntax/syntax.tab.h"
 extern int WordToggle;
 extern FILE* fword;
 int tokennum = 0;
@@ -57,10 +57,10 @@ RC \}
 AERROR .
 
 %%
+"//".* {if(WordToggle) fputs("COMMENTS",fword);}
 "/*" {BEGIN COMMENT;if(WordToggle) fputs("COMMENTS",fword);}
 <COMMENT>"*/" {BEGIN INITIAL;}
 <COMMENT>. {}
-"//".* {if(WordToggle) fputs("COMMENTS",fword);}
 
 {TYPE} {
     if(WordToggle)

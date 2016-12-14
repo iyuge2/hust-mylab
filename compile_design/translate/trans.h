@@ -5,18 +5,27 @@
 #include"../syntax/syntaxTree.h"
 #include"../semantic/semantic_analyse.h"
 
+#define LATMAX 5
+
 extern FILE* ftrans;
 extern unsigned int hashcalc(char *name);
 extern _pFuncTable currentFunc;
 
 typedef struct LabelList _LabelList;
 typedef struct LabelList* _pLabelList;
+typedef struct ArrayLat _ArrayLat;
+typedef struct ArrayLat* _pArrayLat;
 
 struct LabelList{//标签的链表域
     int labelNum[4];//if-else-if 最多需要存放的标签个数不超过3个
     int whileNum;//记录while前面那个标签号
     int lenth;//标签个数,不包括whileNum
     _pLabelList next;
+};
+
+struct ArrayLat{
+    int lat;//维度
+    int size[LATMAX];//每维的大小
 };
 
 void translate();//中间代码生成主函数

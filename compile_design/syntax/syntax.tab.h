@@ -83,7 +83,7 @@ union YYSTYPE
 {
 #line 13 "syntax.y" /* yacc.c:1909  */
 
-    struct GrammaNode* node;
+    GrammaNode* node;
     double dnum;
 
 #line 90 "syntax.tab.h" /* yacc.c:1909  */

@@ -1,7 +1,7 @@
 #ifndef _SEMANTIC_ANALYSE_H
 #define _SEMANTIC_ANALYSE_H
 #include<stdio.h>
-#include"syntaxTree.h"
+#include"../syntax/syntaxTree.h"
 
 #define I_MAXLENTH 32
 #define LATMAX 5 //允许数组的最大维数
@@ -9,6 +9,7 @@
 
 extern FILE* fseman;
 extern int SemanToggle;
+extern int TransToggle;
 /*定义C--的类型系统*/
 typedef struct ExpType _ExpType;
 typedef struct ExpType* _pExpType;
@@ -52,6 +53,7 @@ struct Type
 /*定义C--的符号表*/
 struct VarTable{
     char id[I_MAXLENTH]; //名字
+    int num; //编号,用于后面中间代码生成时生成名字,全局变量<0,局部变量>0
     _pType type; //域的类型
     _pVarTable next; //下一个域
 };
@@ -81,12 +83,7 @@ struct HashTable{
     _pStructTable structHead; //指向结构体定义
 };
 
-_pHashTable HashHead = NULL;//指向当前hash表
-_pVarTable currentVar = NULL;
-_pStructTable currentStruct = NULL;
-_pFuncTable currentFunc = NULL,currentFunc2 = NULL;
-_pVarTable parameter = NULL;//行参指针
-_pExpType currentExpType = NULL;
+extern _pHashTable HashHead;//指向当前hash表
 
 void semantic();//语义分析主函数
 void InitHashTable(_HashTable pH);//初始化hash表

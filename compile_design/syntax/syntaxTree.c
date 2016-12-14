@@ -1,4 +1,5 @@
 #include"syntaxTree.h"
+GrammaNode* grammaTreeHead = NULL;
 /*
  * 在语法树中插入结点,变长参数
  * name:语法单元名字；

@@ -11,10 +11,9 @@
 %}
 
 %union{
-    struct GrammaNode* node;
+    GrammaNode* node;
     double dnum;
 }
-
 %error-verbose
 %locations
 /*define tokens*/

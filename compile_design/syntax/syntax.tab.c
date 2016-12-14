@@ -141,7 +141,7 @@ union YYSTYPE
 {
 #line 13 "syntax.y" /* yacc.c:355  */
 
-    struct GrammaNode* node;
+    GrammaNode* node;
     double dnum;
 
 #line 148 "syntax.tab.c" /* yacc.c:355  */
@@ -477,13 +477,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    52,    52,    64,    65,    67,    68,    69,    70,    71,
-      72,    73,    75,    76,    78,    84,    92,    98,   100,   106,
-     108,   115,   116,   118,   124,   131,   132,   139,   141,   142,
-     144,   145,   146,   147,   148,   149,   150,   151,   152,   153,
-     155,   156,   158,   159,   161,   162,   164,   165,   167,   172,
-     177,   182,   187,   192,   197,   202,   207,   212,   217,   222,
-     227,   233,   239,   240,   241,   247,   254,   262,   263
+       0,    51,    51,    63,    64,    66,    67,    68,    69,    70,
+      71,    72,    74,    75,    77,    83,    91,    97,    99,   105,
+     107,   114,   115,   117,   123,   130,   131,   138,   140,   141,
+     143,   144,   145,   146,   147,   148,   149,   150,   151,   152,
+     154,   155,   157,   158,   160,   161,   163,   164,   166,   171,
+     176,   181,   186,   191,   196,   201,   206,   211,   216,   221,
+     226,   232,   238,   239,   240,   246,   253,   261,   262
 };
 #endif
 
@@ -1455,7 +1455,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 53 "syntax.y" /* yacc.c:1646  */
+#line 52 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Program",1,(yyvsp[0].node));
         (yyval.node)->rulenum = 1;
@@ -1470,61 +1470,61 @@ yyreduce:
     break;
 
   case 3:
-#line 64 "syntax.y" /* yacc.c:1646  */
+#line 63 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDefList",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1476 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 65 "syntax.y" /* yacc.c:1646  */
+#line 64 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDefList",0,-1);(yyval.node)->rulenum = 2;}
 #line 1482 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 67 "syntax.y" /* yacc.c:1646  */
+#line 66 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDef",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1488 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 68 "syntax.y" /* yacc.c:1646  */
+#line 67 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDef",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1494 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 69 "syntax.y" /* yacc.c:1646  */
+#line 68 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDef",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 3;}
 #line 1500 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 71 "syntax.y" /* yacc.c:1646  */
+#line 70 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDef",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 4;}
 #line 1506 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 73 "syntax.y" /* yacc.c:1646  */
+#line 72 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDef",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 5;}
 #line 1512 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 75 "syntax.y" /* yacc.c:1646  */
+#line 74 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDecList",1,(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1518 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 76 "syntax.y" /* yacc.c:1646  */
+#line 75 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ExtDecList",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1524 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 79 "syntax.y" /* yacc.c:1646  */
+#line 78 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Specifier",1,(yyvsp[0].node));
         (yyval.node)->rulenum = 1;
@@ -1534,7 +1534,7 @@ yyreduce:
     break;
 
   case 15:
-#line 85 "syntax.y" /* yacc.c:1646  */
+#line 84 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Specifier",2,(yyvsp[-1].node),(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[0].node)->idType);
@@ -1545,7 +1545,7 @@ yyreduce:
     break;
 
   case 16:
-#line 93 "syntax.y" /* yacc.c:1646  */
+#line 92 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("StructSpecifier",5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[-3].node)->idType);
@@ -1555,7 +1555,7 @@ yyreduce:
     break;
 
   case 18:
-#line 101 "syntax.y" /* yacc.c:1646  */
+#line 100 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("OptTag",1,(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[0].node)->idType);
@@ -1565,13 +1565,13 @@ yyreduce:
     break;
 
   case 19:
-#line 106 "syntax.y" /* yacc.c:1646  */
+#line 105 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("OptTag",0,-1);}
 #line 1571 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 109 "syntax.y" /* yacc.c:1646  */
+#line 108 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Tag",1,(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[0].node)->idType);
@@ -1581,19 +1581,19 @@ yyreduce:
     break;
 
   case 21:
-#line 115 "syntax.y" /* yacc.c:1646  */
+#line 114 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("VarDec",1,(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1587 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 116 "syntax.y" /* yacc.c:1646  */
+#line 115 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("VarDec",4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1593 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 119 "syntax.y" /* yacc.c:1646  */
+#line 118 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("FunDec",4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;
         strcpy((yyval.node)->idType,(yyvsp[-3].node)->idType);
@@ -1603,7 +1603,7 @@ yyreduce:
     break;
 
   case 24:
-#line 125 "syntax.y" /* yacc.c:1646  */
+#line 124 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("FunDec",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[-2].node)->idType);
@@ -1613,13 +1613,13 @@ yyreduce:
     break;
 
   case 25:
-#line 131 "syntax.y" /* yacc.c:1646  */
+#line 130 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("VarList",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1619 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 133 "syntax.y" /* yacc.c:1646  */
+#line 132 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node) = InsertNode("COMMA",0,0);
         (yyval.node)=InsertNode("VarList",2,(yyvsp[0].node),(yyval.node));
@@ -1629,109 +1629,109 @@ yyreduce:
     break;
 
   case 27:
-#line 139 "syntax.y" /* yacc.c:1646  */
+#line 138 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("ParamDec",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1635 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 141 "syntax.y" /* yacc.c:1646  */
+#line 140 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("CompSt",4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;(yyvsp[0].node)->type = -1;}
 #line 1641 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 144 "syntax.y" /* yacc.c:1646  */
+#line 143 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("StmtList",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1647 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 145 "syntax.y" /* yacc.c:1646  */
+#line 144 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("StmtList",0,-1);}
 #line 1653 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 146 "syntax.y" /* yacc.c:1646  */
+#line 145 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1659 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 148 "syntax.y" /* yacc.c:1646  */
+#line 147 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",1,(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1665 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 149 "syntax.y" /* yacc.c:1646  */
+#line 148 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 3;}
 #line 1671 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 151 "syntax.y" /* yacc.c:1646  */
+#line 150 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 4;}
 #line 1677 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 152 "syntax.y" /* yacc.c:1646  */
+#line 151 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",7,(yyvsp[-6].node),(yyvsp[-5].node),(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 5;}
 #line 1683 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 153 "syntax.y" /* yacc.c:1646  */
+#line 152 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Stmt",5,(yyvsp[-4].node),(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 6;}
 #line 1689 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 155 "syntax.y" /* yacc.c:1646  */
+#line 154 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("DefList",2,(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1695 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 156 "syntax.y" /* yacc.c:1646  */
+#line 155 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("DefList",0,-1);}
 #line 1701 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 158 "syntax.y" /* yacc.c:1646  */
+#line 157 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Def",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1707 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 161 "syntax.y" /* yacc.c:1646  */
+#line 160 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("DecList",1,(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1713 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 162 "syntax.y" /* yacc.c:1646  */
+#line 161 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("DecList",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1719 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 164 "syntax.y" /* yacc.c:1646  */
+#line 163 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Dec",1,(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1725 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 165 "syntax.y" /* yacc.c:1646  */
+#line 164 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Dec",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1731 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 168 "syntax.y" /* yacc.c:1646  */
+#line 167 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 1;
@@ -1740,7 +1740,7 @@ yyreduce:
     break;
 
   case 49:
-#line 173 "syntax.y" /* yacc.c:1646  */
+#line 172 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 2;
@@ -1749,7 +1749,7 @@ yyreduce:
     break;
 
   case 50:
-#line 178 "syntax.y" /* yacc.c:1646  */
+#line 177 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 3;
@@ -1758,7 +1758,7 @@ yyreduce:
     break;
 
   case 51:
-#line 183 "syntax.y" /* yacc.c:1646  */
+#line 182 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 4;
@@ -1767,7 +1767,7 @@ yyreduce:
     break;
 
   case 52:
-#line 188 "syntax.y" /* yacc.c:1646  */
+#line 187 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 5;
@@ -1776,7 +1776,7 @@ yyreduce:
     break;
 
   case 53:
-#line 193 "syntax.y" /* yacc.c:1646  */
+#line 192 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 6;
@@ -1785,7 +1785,7 @@ yyreduce:
     break;
 
   case 54:
-#line 198 "syntax.y" /* yacc.c:1646  */
+#line 197 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 7;
@@ -1794,7 +1794,7 @@ yyreduce:
     break;
 
   case 55:
-#line 203 "syntax.y" /* yacc.c:1646  */
+#line 202 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 8;
@@ -1803,7 +1803,7 @@ yyreduce:
     break;
 
   case 56:
-#line 208 "syntax.y" /* yacc.c:1646  */
+#line 207 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 9;
@@ -1812,7 +1812,7 @@ yyreduce:
     break;
 
   case 57:
-#line 213 "syntax.y" /* yacc.c:1646  */
+#line 212 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 10;
@@ -1821,7 +1821,7 @@ yyreduce:
     break;
 
   case 58:
-#line 218 "syntax.y" /* yacc.c:1646  */
+#line 217 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",2,(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 11;
@@ -1830,7 +1830,7 @@ yyreduce:
     break;
 
   case 59:
-#line 223 "syntax.y" /* yacc.c:1646  */
+#line 222 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",2,(yyvsp[-1].node),(yyvsp[0].node));
         (yyval.node)->rulenum = 12;
@@ -1839,7 +1839,7 @@ yyreduce:
     break;
 
   case 60:
-#line 228 "syntax.y" /* yacc.c:1646  */
+#line 227 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[-3].node)->idType);
@@ -1849,7 +1849,7 @@ yyreduce:
     break;
 
   case 61:
-#line 234 "syntax.y" /* yacc.c:1646  */
+#line 233 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[-2].node)->idType);
@@ -1859,19 +1859,19 @@ yyreduce:
     break;
 
   case 62:
-#line 239 "syntax.y" /* yacc.c:1646  */
+#line 238 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Exp",4,(yyvsp[-3].node),(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 15;}
 #line 1865 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 240 "syntax.y" /* yacc.c:1646  */
+#line 239 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Exp",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 16;strcpy((yyval.node)->idType,(yyvsp[0].node)->idType);}
 #line 1871 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 242 "syntax.y" /* yacc.c:1646  */
+#line 241 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",1,(yyvsp[0].node));
         strcpy((yyval.node)->idType,(yyvsp[0].node)->idType);
@@ -1881,7 +1881,7 @@ yyreduce:
     break;
 
   case 65:
-#line 248 "syntax.y" /* yacc.c:1646  */
+#line 247 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",1,(yyvsp[0].node));
         (yyval.node)->type = 1;
@@ -1892,7 +1892,7 @@ yyreduce:
     break;
 
   case 66:
-#line 255 "syntax.y" /* yacc.c:1646  */
+#line 254 "syntax.y" /* yacc.c:1646  */
     {
         (yyval.node)=InsertNode("Exp",1,(yyvsp[0].node));
         (yyval.node)->type = 2;
@@ -1903,13 +1903,13 @@ yyreduce:
     break;
 
   case 67:
-#line 262 "syntax.y" /* yacc.c:1646  */
+#line 261 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Args",3,(yyvsp[-2].node),(yyvsp[-1].node),(yyvsp[0].node));(yyval.node)->rulenum = 1;}
 #line 1909 "syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 263 "syntax.y" /* yacc.c:1646  */
+#line 262 "syntax.y" /* yacc.c:1646  */
     {(yyval.node)=InsertNode("Args",1,(yyvsp[0].node));(yyval.node)->rulenum = 2;}
 #line 1915 "syntax.tab.c" /* yacc.c:1646  */
     break;
@@ -2150,5 +2150,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 264 "syntax.y" /* yacc.c:1906  */
+#line 263 "syntax.y" /* yacc.c:1906  */
 

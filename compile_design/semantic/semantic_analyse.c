@@ -3,6 +3,13 @@
 #define TABLE_MAX  0xff //符号表的容量
 #define REALPARA_MAX 10 //允许的实参最大个数
 
+_pHashTable HashHead = NULL;//指向当前hash表
+_pVarTable currentVar = NULL;
+_pStructTable currentStruct = NULL;
+_pFuncTable currentFunc = NULL,currentFunc2 = NULL;
+_pVarTable parameter = NULL;//行参指针
+_pExpType currentExpType = NULL;
+
 int returnFlag = 1; //设置标记,用于递归函数的返回
 int tag = 0; //1--int,2--float 3--struct
 int arrayLat = 0,arrayLat2 = 0; //记录数组维数
@@ -72,8 +79,9 @@ void CreatSimbolTable(GrammaNode *currentNode)//先序遍历抽象语法树
                             strcpy(currentId,UnNameStructStr);
                             ++UnNameStructNum;
                         }
-                        else//有名结构
+                        else{//有名结构
                             strcpy(currentId,currentNode->lchild->idType);
+                        }
                         currentStruct = (_pStructTable)malloc(sizeof(_StructTable));//新建一个结构
                         currentStruct->head = NULL;
                         currentStruct->next = NULL;
@@ -506,8 +514,15 @@ void FindVar(GrammaNode* currentNode,int op)
             }
             else if(!strcmp(currentNode->name,"ID")){
                 if(currentNode->type != 3){
+                    _pStructTable tStruct = currentStruct;//进行结构体变量的判断
+                    if(op == 1){
+                        currentStruct = NULL;
+                    }
                     if(exitVar(currentNode->idType) == 1){
                         PrintError(3,currentNode->currentLine,currentNode->idType);
+                    }
+                    if(op == 1){
+                        currentStruct = tStruct;
                     }
                     currentVar = (_pVarTable)malloc(sizeof(_VarTable));
                     if(!currentVar){
@@ -558,7 +573,7 @@ void FindStructVar(GrammaNode* currentNode)
                 else{
                     tag = 3;
                     strcpy(currentId,currentNode->lchild->idType);
-                    if(exitStruct(currentId) == 1){//未定义该结构体
+                    if(exitStruct(currentId)){//未定义该结构体或者为正在定义的结构体
                         PrintError(17,currentNode->currentLine,currentId);
                     }
                     else{ //从ExtDecList处开始搜索子树
@@ -1332,6 +1347,9 @@ void PrintVarSimbol()
  * */
 void PrintError(int op,int line,char *s)
 {
+    if(TransToggle){
+        TransToggle = 0;
+    }
     switch(op){
         case 1:
             printf("Error type %d at Line %d: Undefined variable '%s'.\n",op,line,s);

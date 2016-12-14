@@ -11,14 +11,16 @@ extern int yylineno;
 extern char* yytext;
 extern FILE* fgramma;
 
+typedef struct GrammaNode GrammaNode;
 /*抽象语法树的结点*/
-typedef struct GrammaNode
+struct GrammaNode
 {
     int currentLine; //行号
     int rulenum;//记录非终结符用的是第几条归约规则
     //1--int 2--float 3--struct
     int type;
     char name[15];//语法单元的名字
+    char trans[10];//用于存放临时变量
     union//共用体用来存放ID/TYPE/INTEGER结点的值
     {
         char idType[I_MAXLENTH];
@@ -29,9 +31,9 @@ typedef struct GrammaNode
     };
     struct GrammaNode *lchild;//左孩子
     struct GrammaNode *rchild;//右孩子
-}GrammaNode;
+};
 
-GrammaNode* grammaTreeHead;
+extern GrammaNode* grammaTreeHead;
 
 void yyerror(const char*s,...);
 GrammaNode* InsertNode(char* name,int num,...);
