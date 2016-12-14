@@ -9,6 +9,7 @@
 int main(int argc,char** argv)
 {
     int i = 0;
+    int flag = 0;
     if(argc < 2){
         printf("please input filename\n");
         return 1;
@@ -30,6 +31,10 @@ int main(int argc,char** argv)
             SemanToggle = 1;
             fseman = fopen(argv[i+1],"w");
         }
+        if(!strcmp(argv[i],"-o")){//指定目标代码的名字
+            flag = 1;
+            fmips = fopen(argv[i+1],"w");
+        }
     }
     yyrestart(fd);
 //    yydebug = 1;
@@ -39,7 +44,16 @@ int main(int argc,char** argv)
         if(!(ftrans = fopen(translateName,"w"))){
             exit(1);
         }
-        translate();//进行中间语言制导翻译
+        translate();//翻译成中间语言
+        MipsToggle = 1;//打开生成目标代码的开关
+    }
+    if(MipsToggle){
+        if(!flag){
+            fmips = fopen(defaultName,"w");
+        }
+        fclose(ftrans);//关闭写功能
+        ftrans = fopen(translateName,"r");//以只读功能打开中间代码文件
+        GetMipsCode();//生成目标代码
     }
     fclose(fd);
     if(WordToggle){
@@ -53,6 +67,9 @@ int main(int argc,char** argv)
     }
     if(TransToggle){
         fclose(ftrans);
+    }
+    if(MipsToggle || flag){
+        fclose(fmips);
     }
     return 0;
 }

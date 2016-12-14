@@ -1,0 +1,31 @@
+struct Operands
+{
+    int o1;
+    int o2;
+};
+
+int add(int i)
+{
+    int temp[2];
+    temp[1] = i;
+    return (temp[0] + temp[1]);
+}
+
+int main()
+{
+    int op[2];
+    int r[1][2];
+    int i,j;
+    i = 0;
+    j = 0;
+    while(i < 2){
+        while(j < 2){
+            op[1] = i + j;
+            j = j + 1;
+        }
+        r[0][2] = add(i);
+        i = i + 1;
+        j = 0;
+    }
+    return 0;
+}

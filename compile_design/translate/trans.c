@@ -271,7 +271,7 @@ void translate_exp(GrammaNode* currentNode)
                             fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
                         }
                         structAddr = GetStructAddr(tempNode->idType,tempNode->rchild->rchild->idType);
-                        fprintf(ftrans,"*t%d := t%d + #%d\n",tNum,tNum-1,structAddr);
+                        fprintf(ftrans,"t%d := t%d + #%d\n",tNum,tNum-1,structAddr);
                         sprintf(currentNode->trans,"*t%d",tNum++);
                         return;
                     case 17://ID

@@ -1,10 +1,10 @@
-#update-time:2016-12-12 19:58
+#update-time:2016-12-14 14:40
 CC=gcc
 CFLAGS=-Wall -g -c
 
-VPATH = syntax:word:semantic:translate
+VPATH = syntax:word:semantic:translate:mips
 
-Objects = main.o syntax.o lex.o syntaxTree.o semantic.o translate.o
+Objects = main.o syntax.o lex.o syntaxTree.o semantic.o translate.o mips.o
 
 mycompile: $(Objects)
 	$(CC) -o $@ $(Objects)
@@ -20,6 +20,8 @@ semantic.o: semantic_analyse.c
 	$(CC) $(CFLAGS) -o $@ $<
 translate.o: trans.c
 	$(CC) $(CFLAGS) -o $@ $<
+mips.o: mipscode.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 .PHONY:clean all
 all:
@@ -30,4 +32,4 @@ all:
 	cd ../;\
 	make
 clean:
-	rm *.o
+	rm *.o *.s *.m
