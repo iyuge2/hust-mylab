@@ -302,12 +302,9 @@ void CheckExpType(GrammaNode* currentNode)
                     case 15://Exp LB Exp RB
                         if(!arrayLat2){
                             GetLat(temp);//获取数组的维度
-                            CheckExpType(temp->rchild->rchild->lchild);
+                            CheckExpType(temp->rchild->rchild);
                         }
                         if(temp->rchild->rchild->type != 1){
-                                //if(!strcmp(temp->rchild->rchild->name,"FLOAT")){字符串转换成整数
-                                //    PrintError(12,currentNode->currentLine,)
-                                //}
                                 PrintError(12,currentNode->currentLine,temp->rchild->rchild->idType);
                         }
                         CheckExpType(temp);

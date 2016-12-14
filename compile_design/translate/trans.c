@@ -53,6 +53,7 @@ void GetMiddleCode(GrammaNode* currentNode)
 void translate_gVar()
 {
     int i = 0;
+    int flag = 0;
     _pVarTable tVar = NULL;
     for(i = 0;i < TABLE_MAX;++i){
         if(HashHead[i].varHead){
@@ -60,10 +61,14 @@ void translate_gVar()
             while(tVar){
                 tVar->num = -gVarNum;
                 fprintf(ftrans,"DEC gv%d %d\n",gVarNum++,GetVarSize(tVar));
+                if(!flag)
+                    flag = 1;
                 tVar = tVar->next;
             }
         }
     }
+    if(flag)
+        fprintf(ftrans,"\n");
 }
 
 /*翻译函数参数*/
