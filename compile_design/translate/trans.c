@@ -5,14 +5,18 @@ int VarNum = 1;//局部变量编号
 int tNum = 1;//临时变量编号
 int tIdNum = 0;//存放变量的临时编号
 int labelNum = 1;//存放标签号
+int arrayAddr = 0,structAddr = 0;
 _pFuncTable currFunc = NULL;
 _pLabelList currentLabel = NULL;
 _ArrayLat tempLat;
 
 void translate()
 {
+    printf("未检测到语义错误!\n");
+    printf("开始生成中间代码...\n");
     translate_gVar();//翻译全局变量
     GetMiddleCode(grammaTreeHead);
+    printf("...中间代码生成完毕\n");
 }
 
 void GetMiddleCode(GrammaNode* currentNode)
@@ -254,17 +258,29 @@ void translate_exp(GrammaNode* currentNode)
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
                         if(tempNode->type == -1){
-                            fprintf(ftrans,"t%d := *%s\n",tNum++,tempNode->trans);
+                            fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
                         }
+                        arrayAddr = GetArrayAddr(tempNode);
+                        fprintf(ftrans,"t%d := %s * #%d\n",tNum++,tempNode->rchild->rchild->trans,arrayAddr);
+                        fprintf(ftrans,"t%d := t%d + t%d\n",tNum,tNum-1,tNum-2);
+                        sprintf(currentNode->trans,"*t%d",tNum++);
                         return;
                     case 16://Exp DOT ID
+                        translate_exp(tempNode);
+                        if(tempNode->type == -1){
+                            fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
+                        }
+                        structAddr = GetStructAddr(tempNode->idType,tempNode->rchild->rchild->idType);
+                        fprintf(ftrans,"*t%d := t%d + #%d\n",tNum,tNum-1,structAddr);
+                        sprintf(currentNode->trans,"*t%d",tNum++);
+                        return;
                     case 17://ID
                         tIdNum = GetVarNum(tempNode->idType);
                         if(tIdNum > 0){
                             sprintf(currentNode->trans,"v%d",tIdNum);
                         }
                         else{
-                            sprintf(currentNode->trans,"gv%d",tIdNum);
+                            sprintf(currentNode->trans,"gv%d",-tIdNum);
                         }
                         currentNode->type = -1;
                         break;
@@ -300,6 +316,97 @@ void translate_args(GrammaNode* currentNode)
             return;
         }
     }
+}
+
+/*计算并返回数组的地址*/
+int GetArrayAddr(GrammaNode* currentNode)
+{
+    int lat = 0;//记录数组的维度
+    int addr = 1;
+    int i = 0;
+    while(currentNode){
+        if(!strcmp(currentNode->name,"Exp")){
+            ++lat;
+        }
+        currentNode = currentNode->lchild;
+    }
+    for(i = lat;i < tempLat.lat;++i){
+        addr *= tempLat.size[i];
+    }
+    return addr*4;
+}
+
+/*计算并返回结构成员的地址*/
+int GetStructAddr(char *sname,char *mname)
+{
+    char *structName = NULL;
+    int msize = 0;
+    unsigned int hash = 0;
+    _pVarTable tVar = NULL;
+    _pStructTable tStruct = NULL;
+    /*找到该结构体*/
+    if(currFunc){
+        tVar = currFunc->paraHead;
+        while(tVar){//在形参中找
+            if(!strcmp(sname,tVar->id)){
+                if(tVar->type->kind == 3)//为普通结构
+                    structName = tVar->type->typeSys.structId;
+                else//为结构数组
+                    structName = tVar->type->typeSys.array.elem->structId;
+                break;
+            }
+            tVar = tVar->next;
+        }
+        if(!structName){//在局部变量中找
+            tVar = currFunc->localHead;
+            while(tVar){
+                if(!strcmp(sname,tVar->id)){
+                    if(tVar->type->kind == 3)//为普通结构
+                        structName = tVar->type->typeSys.structId;
+                    else//为结构数组
+                        structName = tVar->type->typeSys.array.elem->structId;
+                    break;
+                }
+                tVar = tVar->next;
+            }
+        }
+        if(!structName){//在全局变量中找
+            hash = hashcalc(sname);
+            if(HashHead[hash].varHead){
+                tVar = HashHead[hash].varHead;
+                while(tVar){
+                    if(!strcmp(sname,tVar->id)){
+                        if(tVar->type->kind == 3)//为普通结构
+                            structName = tVar->type->typeSys.structId;
+                        else//为结构数组
+                            structName = tVar->type->typeSys.array.elem->structId;
+                        break;
+                    }
+                    tVar = tVar->next;
+                }
+            }
+        }
+    }
+    hash = hashcalc(structName);
+    if(HashHead[hash].structHead)
+        tStruct = HashHead[hash].structHead;
+    while(tStruct){
+        if(!strcmp(tStruct->structName,structName)){//找到该结构
+            break;
+        }
+        tStruct = tStruct->next;
+    }
+    if(tStruct){
+        tVar = tStruct->head;
+        while(tVar){
+            if(!strcmp(tVar->id,mname)){//找到该成员
+                return msize;
+            }
+            msize += GetVarSize(tVar);
+            tVar = tVar->next;
+        }
+    }
+    return msize;
 }
 
 /*增加一个标签域*/

@@ -10,6 +10,7 @@
 extern FILE* fseman;
 extern int SemanToggle;
 extern int TransToggle;
+
 /*定义C--的类型系统*/
 typedef struct ExpType _ExpType;
 typedef struct ExpType* _pExpType;

@@ -30,6 +30,7 @@ struct ArrayLat{
 
 void translate();//中间代码生成主函数
 void GetMiddleCode(GrammaNode* currentNode);//遍历语法树,获得中间代码
+
 void translate_gVar();//翻译所有的全局变量
 void translate_param(_pFuncTable tFunc);//翻译函数形参
 void translate_localVar(_pFuncTable tFunc);//翻译函数的局部变量
@@ -40,6 +41,8 @@ void translate_args(GrammaNode* currentNode);//翻译函数实参
 int GetVarNum(char* id);//获得变量的编号
 int GetVarSize(_pVarTable var);//获得变量的大小
 int GetStructSize(char* structId);//获取结构体的大小
+int GetArrayAddr(GrammaNode* currentNode);//计算并返回数组的大小
+int GetStructAddr(char *sname,char *mname);//计算并返回结构成员的地址
 
 void AddLabel();//新增一个标签域
 void DestoryLabel();//销毁一个标签域

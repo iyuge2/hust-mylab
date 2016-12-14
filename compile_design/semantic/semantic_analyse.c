@@ -24,6 +24,7 @@ _ExpType RealPara[REALPARA_MAX];
 /*语义分析*/
 void semantic()
 {
+    printf("开始进行语义检查...\n");
     CreatSimbolTable(grammaTreeHead);
     CheckFuncDef(grammaTreeHead);
     if(SemanToggle){
@@ -31,6 +32,7 @@ void semantic()
         PrintStructSimbol();
         PrintVarSimbol();
     }
+    printf("...语义检查完毕\n");
 }
 
 /*
