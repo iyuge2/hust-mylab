@@ -9,6 +9,9 @@ int arrayAddr = 0,structAddr = 0;
 _pFuncTable currFunc = NULL;
 _pLabelList currentLabel = NULL;
 _ArrayLat tempLat;
+_pMiddleCode CodeHead = NULL;//四元组链表头指针
+_pMiddleCode currentCode = NULL;//指向当前四元组
+_MiddleCode tCode;
 
 void translate()
 {
@@ -16,6 +19,7 @@ void translate()
     printf("开始生成中间代码...\n");
     translate_gVar();//翻译全局变量
     GetMiddleCode(grammaTreeHead);
+    PrintCode();//打印中间代码
     printf("...中间代码生成完毕\n");
 }
 
@@ -25,7 +29,10 @@ void GetMiddleCode(GrammaNode* currentNode)
         if(currentNode->currentLine != -1){
             if(!strcmp(currentNode->name,"ExtDef") && currentNode->rulenum == 5){
                 GrammaNode* tempFunc = currentNode->lchild->rchild;
-                fprintf(ftrans,"FUNCTION %s :\n",tempFunc->idType);
+                //fprintf(ftrans,"FUNCTION %s :\n",tempFunc->idType);
+                tCode.kind = 6;
+                sprintf(tCode.id1,"%s",tempFunc->idType);
+                AddACode();
                 unsigned int hash = hashcalc(tempFunc->idType);
                 currFunc = HashHead[hash].funHead;
                 while(currFunc){//找到当前函数
@@ -41,7 +48,11 @@ void GetMiddleCode(GrammaNode* currentNode)
                         translate_localVar(currFunc);//翻译函数的局部变量
                     translate_stmt(currentNode->lchild->rchild->rchild->lchild->rchild->rchild->lchild);//翻译语句
                 }
-                fprintf(ftrans,"\n");
+                //fprintf(ftrans,"\n");
+                tCode.kind = 7;
+                AddACode();
+                if(currentNode->rchild)
+                    currentNode = currentNode->rchild;
             }
         }
         GetMiddleCode(currentNode->lchild);
@@ -60,15 +71,21 @@ void translate_gVar()
             tVar = HashHead[i].varHead;
             while(tVar){
                 tVar->num = -gVarNum;
-                fprintf(ftrans,"DEC gv%d %d\n",gVarNum++,GetVarSize(tVar));
+                //fprintf(ftrans,"DEC gv%d %d\n",gVarNum++,GetVarSize(tVar));
+                tCode.kind = 3;
+                sprintf(tCode.id1,"gv%d",gVarNum++);
+                sprintf(tCode.id2,"%d",GetVarSize(tVar));
+                AddACode();
                 if(!flag)
                     flag = 1;
                 tVar = tVar->next;
             }
         }
     }
-    if(flag)
-        fprintf(ftrans,"\n");
+    if(flag){
+        tCode.kind = 7;
+        AddACode();
+    }
 }
 
 /*翻译函数参数*/
@@ -77,7 +94,11 @@ void translate_param(_pFuncTable tFunc)
     _pVarTable tVar = tFunc->paraHead;
     while(tVar){
         tVar->num = VarNum;
-        fprintf(ftrans,"PARAM v%d %d\n",VarNum++,GetVarSize(tVar));
+        //fprintf(ftrans,"PARAM v%d %d\n",VarNum++,GetVarSize(tVar));
+        tCode.kind = 4;
+        sprintf(tCode.id1,"v%d",VarNum++);
+        sprintf(tCode.id2,"v%d",GetVarSize(tVar));
+        AddACode();
         tVar = tVar->next;
     }
 }
@@ -88,7 +109,11 @@ void translate_localVar(_pFuncTable tFunc)
     _pVarTable tVar = tFunc->localHead;
     while(tVar){
         tVar->num = VarNum;
-        fprintf(ftrans,"DEC v%d %d\n",VarNum++,GetVarSize(tVar));
+        //fprintf(ftrans,"DEC v%d %d\n",VarNum++,GetVarSize(tVar));
+        tCode.kind = 3;
+        sprintf(tCode.id1,"v%d",gVarNum++);
+        sprintf(tCode.id2,"%d",GetVarSize(tVar));
+        AddACode();
         tVar = tVar->next;
     }
 }
@@ -109,44 +134,88 @@ void translate_stmt(GrammaNode* currentNode)
                         return;
                     case 3://RETURN Exp SEMI
                         translate_exp(tempNode->rchild);
-                        fprintf(ftrans,"RETURN %s\n",tempNode->rchild->trans);
+                        //fprintf(ftrans,"RETURN %s\n",tempNode->rchild->trans);
+                        tCode.kind = 5;
+                        sprintf(tCode.id1,"%s",tempNode->rchild->trans);
+                        AddACode();
                         break;
                     case 4://IF LP Exp RP Stmt
                     case 5://IF LP Exp RP Stmt ELSE Stmt
                         AddLabel();//新建一个标签域
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"IF %s GOTO label%d\n",tempNode->rchild->rchild->trans,labelNum++);
+                        //fprintf(ftrans,"IF %s GOTO label%d\n",tempNode->rchild->rchild->trans,labelNum++);
+                        tCode.kind = 2;
+                        sprintf(tCode.id1,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.id2,"label%d",labelNum++);
+                        AddACode();
                         addALabel(labelNum-1);
-                        fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                        //fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                        tCode.kind = 8;
+                        sprintf(tCode.id1,"label%d",labelNum++);
+                        AddACode();
                         addALabel(labelNum-1);
-                        fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        tCode.kind = 9;
+                        sprintf(tCode.id1,"label%d",deleteALabel());
+                        AddACode();
                         translate_stmt(tempNode->rchild->rchild->rchild->rchild);
                         if(currentNode->rulenum == 5){
-                            fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                            //fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                            tCode.kind = 8;
+                            sprintf(tCode.id1,"label%d",labelNum++);
+                            AddACode();
                             addALabel(labelNum-1);
-                            fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            tCode.kind = 9;
+                            sprintf(tCode.id1,"label%d",deleteALabel());
+                            AddACode();
                             translate_stmt(tempNode->rchild->rchild->rchild->rchild->rchild->rchild);
-                            fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            tCode.kind = 9;
+                            sprintf(tCode.id1,"label%d",deleteALabel());
+                            AddACode();
                         }
                         else{
-                            fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                            tCode.kind = 9;
+                            sprintf(tCode.id1,"label%d",deleteALabel());
+                            AddACode();
                         }
                         DestoryLabel();//删除当前标签域
                         currentNode = currentNode->rchild;
                         break;
                     case 6://WHILE LP Exp RP Stmt
                         AddLabel();//新建一个标签域
-                        fprintf(ftrans,"LABEL label%d :\n",labelNum++);
+                        //fprintf(ftrans,"LABEL label%d :\n",labelNum++);
+                        tCode.kind = 9;
+                        sprintf(tCode.id1,"label%d",labelNum++);
+                        AddACode();
                         currentLabel->whileNum = labelNum - 1;
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"IF %s GOTO label%d\n",tempNode->rchild->rchild->trans,labelNum++);
+                        //fprintf(ftrans,"IF %s GOTO label%d\n",tempNode->rchild->rchild->trans,labelNum++);
+                        tCode.kind = 2;
+                        sprintf(tCode.id1,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.id2,"label%d",labelNum++);
+                        AddACode();
                         addALabel(labelNum-1);
-                        fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                        //fprintf(ftrans,"GOTO label%d\n",labelNum++);
+                        tCode.kind = 9;
+                        sprintf(tCode.id1,"label%d",labelNum++);
+                        AddACode();
                         addALabel(labelNum-1);
-                        fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        tCode.kind = 9;
+                        sprintf(tCode.id1,"label%d",deleteALabel());
+                        AddACode();
                         translate_stmt(tempNode->rchild->rchild->rchild->rchild);
-                        fprintf(ftrans,"GOTO label%d\n",currentLabel->whileNum);
-                        fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        //fprintf(ftrans,"GOTO label%d\n",currentLabel->whileNum);
+                        tCode.kind = 8;
+                        sprintf(tCode.id1,"label%d",currentLabel->whileNum);
+                        AddACode();
+                        //fprintf(ftrans,"LABEL label%d :\n",deleteALabel());
+                        tCode.kind = 9;
+                        sprintf(tCode.id1,"label%d",deleteALabel());
+                        AddACode();
                         DestoryLabel();//删除当前标签域
                         currentNode = currentNode->rchild;
                         break;
@@ -171,7 +240,11 @@ void translate_exp(GrammaNode* currentNode)
                     case 1://Exp ASSIGNOP Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"%s := %s\n",tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"%s := %s\n",tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 0;
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        AddACode();
                         return;
                     case 2://Exp AND Exp
                         translate_exp(tempNode);
@@ -188,22 +261,22 @@ void translate_exp(GrammaNode* currentNode)
                         translate_exp(tempNode->rchild->rchild);
                         switch(tempNode->rchild->relop){
                             case 1:
-                                sprintf(currentNode->trans,"%s > %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"1%s > %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             case 2:
-                                sprintf(currentNode->trans,"%s < %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"2%s < %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             case 3:
-                                sprintf(currentNode->trans,"%s >= %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"3%s >= %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             case 4:
-                                sprintf(currentNode->trans,"%s <= %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"4%s <= %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             case 5:
-                                sprintf(currentNode->trans,"%s == %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"5%s == %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             case 6:
-                                sprintf(currentNode->trans,"%s != %s",tempNode->trans,tempNode->rchild->rchild->trans);
+                                sprintf(currentNode->trans,"6%s != %s",tempNode->trans,tempNode->rchild->rchild->trans);
                                 break;
                             default:
                                 break;
@@ -216,31 +289,61 @@ void translate_exp(GrammaNode* currentNode)
                     case 5://Exp PLUS Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"t%d := %s + %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"t%d := %s + %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 1;
+                        tCode.op = '+';
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 6://Exp MINUS Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"t%d := %s - %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"t%d := %s - %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 1;
+                        tCode.op = '-';
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 7://Exp STAR Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"t%d := %s * %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"t%d := %s * %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 1;
+                        tCode.op = '*';
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 8://Exp DIV Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"t%d := %s / %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"t%d := %s / %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 1;
+                        tCode.op = '/';
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 9://Exp MOD Exp
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
-                        fprintf(ftrans,"t%d := %s / %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        //fprintf(ftrans,"t%d := %s / %s\n",tNum,tempNode->trans,tempNode->rchild->rchild->trans);
+                        tCode.kind = 1;
+                        tCode.op = '%';
+                        sprintf(tCode.id1,"%s",tempNode->trans);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 10://LP Exp RP
@@ -249,34 +352,68 @@ void translate_exp(GrammaNode* currentNode)
                         return;
                     case 11://MINUS Exp
                         translate_exp(tempNode->rchild);
-                        fprintf(ftrans,"t%d := #0 - %s\n",tNum,tempNode->rchild->trans);
+                        //fprintf(ftrans,"t%d := #0 - %s\n",tNum,tempNode->rchild->trans);
+                        tCode.kind = 10;
+                        sprintf(tCode.id1,"t%d",tNum);
+                        sprintf(tCode.id2,"%s",tempNode->rchild->trans);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         return;
                     case 13://ID LP Args RP
                     case 14://ID LP RP
                         if(currentNode->rulenum == 13)
                             translate_args(currentNode->lchild->rchild->rchild);//翻译函数参数
-                        fprintf(ftrans,"t%d := CALL %s\n",tNum,tempNode->idType);
+                        //fprintf(ftrans,"t%d := CALL %s\n",tNum,tempNode->idType);
+                        tCode.kind = 11;
+                        sprintf(tCode.id1,"t%d",tNum);
+                        sprintf(tCode.id2,"%s",tempNode->idType);
+                        AddACode();
                         sprintf(currentNode->trans,"t%d",tNum++);
                         break;
                     case 15://Exp LB Exp RB
                         translate_exp(tempNode);
                         translate_exp(tempNode->rchild->rchild);
                         if(tempNode->type == -1){
-                            fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
+                            //fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
+                            tCode.kind = 0;
+                            sprintf(tCode.id1,"t%d",tNum++);
+                            sprintf(tCode.id2,"&%s",tempNode->trans);
+                            AddACode();
                         }
                         arrayAddr = GetArrayAddr(tempNode);
-                        fprintf(ftrans,"t%d := %s * #%d\n",tNum++,tempNode->rchild->rchild->trans,arrayAddr);
-                        fprintf(ftrans,"t%d := t%d + t%d\n",tNum,tNum-1,tNum-2);
+                        //fprintf(ftrans,"t%d := %s * #%d\n",tNum++,tempNode->rchild->rchild->trans,arrayAddr);
+                        tCode.kind = 1;
+                        tCode.op = '*';
+                        sprintf(tCode.id1,"%s",tempNode->rchild->rchild->trans);
+                        sprintf(tCode.id1,"#%d",arrayAddr);
+                        sprintf(tCode.res,"t%d",tNum++);
+                        AddACode();
+                        //fprintf(ftrans,"t%d := t%d + t%d\n",tNum,tNum-1,tNum-2);
+                        tCode.kind = 1;
+                        tCode.op = '+';
+                        sprintf(tCode.id1,"t%d",tNum-1);
+                        sprintf(tCode.id1,"t%d",tNum-2);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"*t%d",tNum++);
                         return;
                     case 16://Exp DOT ID
                         translate_exp(tempNode);
                         if(tempNode->type == -1){
-                            fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
+                            //fprintf(ftrans,"t%d := &%s\n",tNum++,tempNode->trans);
+                            tCode.kind = 0;
+                            sprintf(tCode.id1,"t%d",tNum++);
+                            sprintf(tCode.id2,"&%s",tempNode->trans);
+                            AddACode();
                         }
                         structAddr = GetStructAddr(tempNode->idType,tempNode->rchild->rchild->idType);
-                        fprintf(ftrans,"t%d := t%d + #%d\n",tNum,tNum-1,structAddr);
+                        //fprintf(ftrans,"t%d := t%d + #%d\n",tNum,tNum-1,structAddr);
+                        tCode.kind = 1;
+                        tCode.op = '+';
+                        sprintf(tCode.id1,"t%d",tNum-1);
+                        sprintf(tCode.id1,"#%d",structAddr);
+                        sprintf(tCode.res,"t%d",tNum);
+                        AddACode();
                         sprintf(currentNode->trans,"*t%d",tNum++);
                         return;
                     case 17://ID
@@ -311,13 +448,19 @@ void translate_args(GrammaNode* currentNode)
     if(!strcmp(currentNode->name,"Args")){
         if(currentNode->rulenum == 1){//Exp COMMA Args
             translate_exp(currentNode->lchild);
-            fprintf(ftrans,"ARG %s\n",currentNode->lchild->trans);
+            //fprintf(ftrans,"ARG %s\n",currentNode->lchild->trans);
+            tCode.kind = 12;
+            sprintf(tCode.id1,"%s",currentNode->lchild->trans);
+            AddACode();
             translate_args(currentNode->lchild->rchild->rchild);
             return;
         }
         else{//Exp
             translate_exp(currentNode->lchild);
-            fprintf(ftrans,"ARG %s\n",currentNode->lchild->trans);
+            //fprintf(ftrans,"ARG %s\n",currentNode->lchild->trans);
+            tCode.kind = 12;
+            sprintf(tCode.id1,"%s",currentNode->lchild->trans);
+            AddACode();
             return;
         }
     }
@@ -456,6 +599,62 @@ int deleteALabel()
     return temp;
 }
 
+/*在链表中增加一个四元组*/
+void AddACode()
+{
+    _pMiddleCode tempCode = (_pMiddleCode)malloc(sizeof(_MiddleCode));
+    if(tempCode){
+        tempCode->kind = tCode.kind;
+        tempCode->op = tCode.op;
+        switch(tempCode->kind){
+            case 0:
+            case 2:
+            case 3:
+            case 4:
+            case 10:
+            case 11:
+                strcpy(tempCode->id1,tCode.id1);
+                strcpy(tempCode->id2,tCode.id2);
+                break;
+            case 1:
+                strcpy(tempCode->id1,tCode.id1);
+                strcpy(tempCode->id2,tCode.id2);
+                strcpy(tempCode->res,tCode.res);
+                break;
+            case 5:
+            case 6:
+            case 8:
+            case 9:
+            case 12:
+                strcpy(tempCode->id1,tCode.id1);
+                break;
+            case 7:
+                break;
+            default:
+                break;
+
+        }
+        tempCode->next = NULL;
+        //初始化tCode
+        tCode.kind = -1;
+        tCode.op = '0';
+        sprintf(tCode.id1,"0");
+        sprintf(tCode.id2,"0");
+        sprintf(tCode.res,"0");
+    }
+    if(CodeHead == NULL){//加入第一个四元组
+        CodeHead = tempCode;
+        currentCode = CodeHead;
+        return;
+    }
+    else{
+        currentCode->next = tempCode;
+        currentCode = tempCode;
+    }
+}
+
+
+
 /*
  * 查询符号表,返回变量的编号,如果是数组,还返回数组的维数以及下标
  * */
@@ -558,4 +757,56 @@ int GetStructSize(char *structId)
         }
     }
     return structSize;
+}
+/*输出四元组*/
+void PrintCode()
+{
+    _pMiddleCode tempCode = CodeHead;
+    while(tempCode){
+        switch(tempCode->kind){
+            case 0:
+                fprintf(ftrans,"%s := %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 1:
+                fprintf(ftrans,"%s := %s %c %s\n",tempCode->res,tempCode->id1,tempCode->op,tempCode->id2);
+                break;
+            case 2:
+                fprintf(ftrans,"IF %s GOTO %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 3:
+                fprintf(ftrans,"DEC %s %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 4:
+                fprintf(ftrans,"PARAM %s %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 5:
+                fprintf(ftrans,"RETURN %s\n",tempCode->id1);
+                break;
+            case 6:
+                fprintf(ftrans,"FUNCTION %s\n",tempCode->id1);
+                break;
+            case 7:
+                fprintf(ftrans,"\n");
+                break;
+            case 8:
+                fprintf(ftrans,"GOTO %s\n",tempCode->id1);
+                break;
+            case 9:
+                fprintf(ftrans,"LABEL %s :\n",tempCode->id1);
+                break;
+            case 10:
+                fprintf(ftrans,"%s := #0 - %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 11:
+                fprintf(ftrans,"%s := CALL %s\n",tempCode->id1,tempCode->id2);
+                break;
+            case 12:
+                fprintf(ftrans,"ARG %s\n",tempCode->id1);
+                break;
+            default:
+                fprintf(ftrans,"error!\n");
+                break;
+        }
+        tempCode = tempCode->next;
+    }
 }

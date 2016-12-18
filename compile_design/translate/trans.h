@@ -6,6 +6,7 @@
 #include"../semantic/semantic_analyse.h"
 
 #define LATMAX 5
+#define IDLENTH 8
 
 extern FILE* ftrans;
 extern unsigned int hashcalc(char *name);
@@ -15,6 +16,8 @@ typedef struct LabelList _LabelList;
 typedef struct LabelList* _pLabelList;
 typedef struct ArrayLat _ArrayLat;
 typedef struct ArrayLat* _pArrayLat;
+typedef struct MiddleCode _MiddleCode;
+typedef struct MiddleCode* _pMiddleCode;
 
 struct LabelList{//标签的链表域
     int labelNum[4];//if-else-if 最多需要存放的标签个数不超过3个
@@ -28,8 +31,22 @@ struct ArrayLat{
     int size[LATMAX];//每维的大小
 };
 
+struct MiddleCode{//记录四元组--eg: (+ C D T1)
+    int kind;
+/*判断语句类型 0-:= 1-:= + 2-IF 3-DEC 4--PARAM 5-RETURN
+ * 6--FUNCTION 7--换行 8--GOTO 9--LABEL 10-取负 11-CALL 12-ARG*/
+    char op;//+
+    char id1[IDLENTH];//C
+    char id2[IDLENTH];//D
+    char res[IDLENTH];//T1
+    _pMiddleCode next;//指向下一个四元组
+};
+
 void translate();//中间代码生成主函数
 void GetMiddleCode(GrammaNode* currentNode);//遍历语法树,获得中间代码
+
+void AddACode();//在四元组链中加入一个四元组
+void PrintCode();//输出四元组
 
 void translate_gVar();//翻译所有的全局变量
 void translate_param(_pFuncTable tFunc);//翻译函数形参
