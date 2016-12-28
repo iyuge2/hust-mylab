@@ -21,7 +21,7 @@ void k_merge(int fnum,int k)
         return ;
     }
     int i = 0;
-    if((fnum % (k-1)) == 1){
+    if((fnum % (k-1)) == 1){//判断是否需要补充虚结点
         fd = new int[fnum];
     }
     else{
@@ -34,7 +34,7 @@ void k_merge(int fnum,int k)
     for(i = 0;i < fnum;++i)
         cout << fd[i] << " ";
     cout << endl;
-    if((k != 2) && (fnum % (k-1)) != 1){
+    if((k != 2) && (fnum % (k-1)) != 1){//补充虚结点
         int temp = fnum;
         fd[fnum] = 0;
         for(;fnum % (k-1) != 1;){
@@ -52,7 +52,7 @@ void k_merge(int fnum,int k)
     for(i = fnum;i >= k;){
         cout << "[" << time++ << "]" << endl;
         for(int j = 0;j < k;++j){
-            temp[j] = findMin(i--);
+            temp[j] = findMin(i--);//找到当前最小的一个文件
             sum += temp[j];
         }
         fd[i++] = sum;

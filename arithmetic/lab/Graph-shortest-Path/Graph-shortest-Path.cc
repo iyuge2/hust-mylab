@@ -7,7 +7,9 @@
  */
 #include"Graph-shortest-Path.h"
 
-static const unsigned int G[7][7] =//7*7
+static const int M = 7;
+
+static const unsigned int G[M][M] =//7*7
 {
     {0      ,20     ,50     ,30     ,INT_MAX,INT_MAX,INT_MAX},
     {INT_MAX,0      ,25     ,INT_MAX,INT_MAX,70     ,INT_MAX},
@@ -27,11 +29,11 @@ static const unsigned int G[7][7] =//7*7
 //    {50     ,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      ,50     },
 //    {60     ,INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      }
 //};
-static _Path R[7];//存放结果
+static _Path R[M];//存放结果
 
 inline void InitR(int point)//初始化R
 {
-    for(int i = 0;i < 7;++i){
+    for(int i = 0;i < M;++i){
         R[i].dist = G[point][i];
         R[i].prePoint = point;
     }
@@ -39,7 +41,7 @@ inline void InitR(int point)//初始化R
 
 int main()
 {
-    cout << "please input the source point v(0<=point<7):" <<endl;
+    cout << "please input the source point v(0<=point<" << M << "):" <<endl;
     int point = 0;
     cin >> point;
     InitR(point);//初始化结果数组
@@ -54,22 +56,26 @@ int main()
  * */
 void DIST(int point)
 {
-    for(int i=point+1; i < 7;++i){//>point
-        for(int j = 0;j < 7;++j){
-            if(R[j].dist > R[i].dist + G[i][j]){
-                R[j].dist = R[i].dist + G[i][j];
-                R[j].prePoint = i;
+    int *S = new int[M];//堆分配内存会自动初始化为0
+    unsigned int i = 0,u = 0,min = INT_MAX;
+    S[point] = 1;
+    for(i = 2;i < M;++i){//确定n-2条边
+        for(int j = 0;j < M;++j){//此步选取当前路径最短且未考虑过的节点
+            if(!S[j] && min > R[j].dist){
+                min = R[j].dist;
+                u = j;
+            }
+        }
+        min = INT_MAX;
+        S[u] = 1;
+        for(int j = 0;j < M;++j){
+            if(!S[j] && R[j].dist > R[u].dist + G[u][j]){
+                R[j].dist = R[u].dist + G[u][j];
+                R[j].prePoint = u;
             }
         }
     }
-    for(int i=point-1; i >= 0;--i){//<point
-        for(int j = 0;j < 7;++j){
-            if(R[j].dist > R[i].dist + G[i][j]){
-                R[j].dist = R[i].dist + G[i][j];
-                R[j].prePoint = i;
-            }
-        }
-    }
+    delete[] S;
 }
 
 /*
@@ -78,7 +84,7 @@ void DIST(int point)
 void Print(int point)
 {
     cout << "-----------------------------------------------\n" << endl;
-    for(int i = 0;i < 7;++i){
+    for(int i = 0;i < M;++i){
         if(R[i].dist == INT_MAX){
             cout << point << " can't get to " << i << endl;
             cout << "-" << endl;

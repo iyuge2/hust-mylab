@@ -16,8 +16,8 @@ void MipsCode()
     _pMiddleCode tempCode = CodeHead;
     while(tempCode){
         switch(tempCode->kind){
-            case 0:
-                if(tempCode->id2[0] == '#'){//x := #k
+            case 0://x := #k
+                if(tempCode->id2[0] == '#'){
                     CharSet(t,tempCode->id2);
                     fprintf(fmips,"  li $4,%s\n",t);
                 }
@@ -25,7 +25,7 @@ void MipsCode()
                     fprintf(fmips,"  move $4,$5\n");
                 }
                 break;
-            case 1:
+            case 1://x := y + #k
             case 10://x := #0 - y
                 if(tempCode->id2[0] == '#'){
                     CharSet(t,tempCode->id2);
@@ -50,7 +50,7 @@ void MipsCode()
                         fprintf(fmips,"  mflo $4\n");
                 }
                 break;
-            case 2:
+            case 2://IF
                 switch(tempCode->id1[0]){
                     case '1'://>
                         fprintf(fmips,"  bgt $4,$5,%s\n",tempCode->id2);
@@ -74,23 +74,24 @@ void MipsCode()
                         break;
                 }
                 break;
-            case 3:
+            case 3://DEC
                 //fprintf(fmips,"  DEC %s %s\n",tempCode->id1,tempCode->id2);
                 break;
-            case 4:
+            case 4://PARAM
                 //fprintf(fmips,"  PARAM %s %s\n",tempCode->id1,tempCode->id2);
                 break;
-            case 5:
+            case 5://RETURN
                 if(tempCode->id1[0] == '#'){
                     CharSet(t,tempCode->id1);
                     fprintf(fmips,"  li $4,%s\n",t);
                 }
                 fprintf(fmips,"  move $v0,$4\n");
+                fprintf(fmips,"  jr $ra");
                 break;
             case 6://Function
                 fprintf(fmips,"%s:\n",tempCode->id1);
                 break;
-            case 7:
+            case 7://换行
                 fprintf(fmips,"\n");
                 break;
             case 8://GOTO
