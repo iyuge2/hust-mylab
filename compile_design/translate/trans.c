@@ -613,6 +613,7 @@ void AddACode()
             case 4:
             case 10:
             case 11:
+                tempCode->res[0] = '$';
                 strcpy(tempCode->id1,tCode.id1);
                 strcpy(tempCode->id2,tCode.id2);
                 break;
@@ -626,9 +627,14 @@ void AddACode()
             case 8:
             case 9:
             case 12:
+                tempCode->id2[0] = '$';
+                tempCode->res[0] = '$';
                 strcpy(tempCode->id1,tCode.id1);
                 break;
             case 7:
+                tempCode->res[0] = '$';
+                tempCode->id1[0] = '$';
+                tempCode->id2[0] = '$';
                 break;
             default:
                 break;

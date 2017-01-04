@@ -47,9 +47,9 @@ void myfunc1()
 {
     int i = 1;//计数器
     signal(SIGINT,SIG_IGN);//忽略信号SIGINT
-    signal(SIGUSR1,handle1);
+    signal(SIGUSR1,handle1);//设置接收信号SIGUSR1
     while(1){
-        write(pipefd[1],&i,sizeof(int));
+        write(pipefd[1],&i,sizeof(int));//往管道中写内容
         i++;//计数器加1
         sleep(1);
     }
@@ -59,24 +59,24 @@ void myfunc2()
 {
     int m;//用于接收管道中的值
     signal(SIGINT,SIG_IGN);//忽略信号SIGINT
-    signal(SIGUSR2,handle2);
+    signal(SIGUSR2,handle2);//设置接收信号SIGUSR1
     while(1){
-        read(pipefd[0],&m,sizeof(int));
+        read(pipefd[0],&m,sizeof(int));//往管道中读内容
         printf("I send you %d times\n",m);
     }
 }
 
 void handleParent()
 {
-    kill(p1,SIGUSR1);
-    kill(p2,SIGUSR2);
+    kill(p1,SIGUSR1);//发送信号SIGUSR1给进程p1
+    kill(p2,SIGUSR2);//发送信号SIGUSR2给进程p2
 }
 
 void handle1()
 {
     close(pipefd[1]);
     printf("\nChild Process 1 is Killed by Parent!");
-    exit(0);
+    exit(0);//0代表正常退出
 }
 
 void handle2()

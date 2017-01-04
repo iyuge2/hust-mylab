@@ -17,15 +17,15 @@
 char filetype(struct stat* s)
 {
     switch(s->st_mode & S_IFMT){
-        case S_IFBLK: return 'b';
-        case S_IFCHR: return 'c';
-        case S_IFDIR: return 'd';
-        case S_IFIFO: return 'p';
-        case S_IFLNK: return 'l';
-        case S_IFREG: return '-';
+        case S_IFBLK: return 'b';//块设备文件
+        case S_IFCHR: return 'c';//一次性读写文件
+        case S_IFDIR: return 'd';//目录
+        case S_IFIFO: return 'p';//输入输出流文件
+        case S_IFLNK: return 'l';//链接文件
+        case S_IFREG: return '-';//普通文件
         case S_IFSOCK: return 's';
         default:
-            return '@';
+            return '@';//出错标志，自己设的
     }
 }
 
@@ -110,7 +110,7 @@ int main(int argc,char**argv)
 {
     char *topdir = ".";//初始化为当前目录
     int i = 1;
-    while(i < argc){
+    while(i < argc){//判断目录
         if(argv[i][0] != '-'){
             topdir = argv[i];
             break;

@@ -19,16 +19,6 @@ static const unsigned int G[M][M] =//7*7
     {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      ,50     },
     {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      }
 };
-//static const unsigned int G[7][7] =//7*7
-//{
-//    {0      ,20     ,50     ,30     ,INT_MAX,INT_MAX,INT_MAX},
-//    {10     ,0      ,25     ,INT_MAX,INT_MAX,70     ,INT_MAX},
-//    {20     ,INT_MAX,0      ,40     ,25     ,50     ,INT_MAX},
-//    {30     ,INT_MAX,INT_MAX,0      ,55     ,INT_MAX,INT_MAX},
-//    {40     ,INT_MAX,INT_MAX,INT_MAX,0      ,10     ,70     },
-//    {50     ,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      ,50     },
-//    {60     ,INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,0      }
-//};
 static _Path R[M];//存放结果
 
 inline void InitR(int point)//初始化R

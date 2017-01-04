@@ -14,6 +14,9 @@ int main()
     int k = 0;
     cout << "结点总数: ";
     cin >> k;
+    if(k == 0){
+        return 0;
+    }
     head = new _pSGraph[k];
     for(int i = 1;i <= k;++i){//存储图的相关信息
         int out = 0;
