@@ -53,7 +53,7 @@ int main(int argc,char** argv)
         }
         fclose(ftrans);//关闭写功能
         ftrans = fopen(translateName,"r");//以只读功能打开中间代码文件
-        GetMipsCode();//生成目标代码
+        //GetMipsCode();//生成目标代码
     }
     fclose(fd);
     if(WordToggle){

@@ -41,28 +41,42 @@ struct MiddleCode{//记录四元组--eg: (+ C D T1)
     char res[IDLENTH];//T1
     _pMiddleCode next;//指向下一个四元组
 };
-
-void translate();//中间代码生成主函数
-void GetMiddleCode(GrammaNode* currentNode);//遍历语法树,获得中间代码
-
-void AddACode();//在四元组链中加入一个四元组
-void PrintCode();//输出四元组
-
-void translate_gVar();//翻译所有的全局变量
-void translate_param(_pFuncTable tFunc);//翻译函数形参
-void translate_localVar(_pFuncTable tFunc);//翻译函数的局部变量
-void translate_stmt(GrammaNode* currentNode);//翻译函数内的语句
-void translate_exp(GrammaNode* currentNode);//翻译表达式
-void translate_args(GrammaNode* currentNode);//翻译函数实参
-
-int GetVarNum(char* id);//获得变量的编号
-int GetVarSize(_pVarTable var);//获得变量的大小
-int GetStructSize(char* structId);//获取结构体的大小
-int GetArrayAddr(GrammaNode* currentNode);//计算并返回数组的大小
-int GetStructAddr(char *sname,char *mname);//计算并返回结构成员的地址
-
-void AddLabel();//新增一个标签域
-void DestoryLabel();//销毁一个标签域
-void addALabel(int num);//增加一个标签元素
-int deleteALabel();//删除第一个标签元素并返回
+/*中间代码生成主函数*/
+void translate();
+/*遍历语法树,获得中间代码*/
+void GetMiddleCode(GrammaNode* currentNode);
+/*在四元组链中加入一个四元组*/
+void AddACode();
+/*输出四元组*/
+void PrintCode();
+/*翻译所有的全局变量*/
+void translate_gVar();
+/*翻译函数形参*/
+void translate_param(_pFuncTable tFunc);
+/*翻译函数的局部变量*/
+void translate_localVar(_pFuncTable tFunc);
+/*翻译函数内的语句*/
+void translate_stmt(GrammaNode* currentNode);
+/*翻译表达式*/
+void translate_exp(GrammaNode* currentNode);
+/*翻译函数实参*/
+void translate_args(GrammaNode* currentNode);
+/*获得变量的编号*/
+int GetVarNum(char* id);
+/*获得变量的大小*/
+int GetVarSize(_pVarTable var);
+/*获取结构体的大小*/
+int GetStructSize(char* structId);
+/*计算并返回数组的大小*/
+int GetArrayAddr(GrammaNode* currentNode);
+/*计算并返回结构成员的地址*/
+int GetStructAddr(char *sname,char *mname);
+/*新增一个标签域*/
+void AddLabel();
+/*销毁一个标签域*/
+void DestoryLabel();
+/*增加一个标签元素*/
+void addALabel(int num);
+/*删除第一个标签元素并返回*/
+int deleteALabel();
 #endif

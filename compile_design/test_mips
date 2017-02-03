@@ -1,9 +1,0 @@
-int a;
-
-int main()
-{
-    int b,k;
-    b = 0;
-    a = b + k;
-    return 0;
-}

@@ -85,47 +85,72 @@ struct HashTable{
 };
 
 extern _pHashTable HashHead;//指向当前hash表
-
-void semantic();//语义分析主函数
-void InitHashTable(_HashTable pH);//初始化hash表
-unsigned int hashcalc(char *name); //计算hash值
-void CreatNewHashTable(); //初始化新的符号表
-void DestoryHashTable(); //销毁栈顶的符号表
-void CreatSimbolTable(GrammaNode *currentNode);//先序遍历抽象语法树
-
-void FindVar(GrammaNode* currentNode,int op);//寻找当前子树下的变量
-void FindStructVar(GrammaNode* currentNode);//寻找当前子树下的结构体定义
-void FindFunc(GrammaNode* currentNode,int op);//寻找函数定义
-
-int FindExpType(GrammaNode* currentNode);//寻找Exp的类型
-_pExpType FuncBackType(char *id);//函数的返回类型
-_pExpType StructBackType(char *sname,char *memName);//判断结构中数据成员的类型
-_pExpType VarBackType(char *vname);//返回变量的类型
-
-void GetLat(GrammaNode* currentNode);//获取数组的维度
-void CheckExpType(GrammaNode* currentNode);//检测Exp
-void CheckFuncDef(GrammaNode* currentNode);//检测函数未定义的使用
-//void CheckExpArrayType(GrammaNode* currentNode);//检测Exp中的数组
-
-void addVar(_pVarTable pv); //新增一个变量
-int exitVar(char*); //判断一个变量是否存在
-void CopyVar(_pVarTable pt,_pVarTable ps);//ps->pt
-void addLocalVar(_pVarTable pv);//新增一个局部变量
-int isEqualVar(_pVarTable pt,_pVarTable ps);//判断两个变量是否等价
-
-void addStruct(_pStructTable ps);//新增一个结构体定义
-void addStructVar(_pVarTable pv); //新增一个结构体变量
-int exitStruct(char *id);//判断一个结构体是否存在
-int isEqualStruct(char* id1,char* id2,int op);//判断两个结构是否内容等价
-
-void GetRealPara(GrammaNode* currentNode);//获取实参列表
-int ComparePara(char *id);//比较实参和形参
-void addFunc(_pFuncTable pf);//新增一个函数定义
-void addFuncPara(_pVarTable pv); //新增一个函数形参
-int exitFunc(char *id);//判断一个函数是否存在
-
-void PrintFunSimbol();//打印函数符号表
-void PrintStructSimbol();//打印结构符号表
-void PrintVarSimbol();//打印变量符号表
-void PrintError(int op,int line,char *s);//打印错误
+/*语义分析主函数*/
+void semantic();
+/*初始化hash表*/
+void InitHashTable(_HashTable pH);
+/*计算hash值*/
+unsigned int hashcalc(char *name); 
+/*初始化新的符号表*/
+void CreatNewHashTable(); 
+/*销毁栈顶的符号表*/
+void DestoryHashTable(); 
+/*先序遍历抽象语法树*/
+void CreatSimbolTable(GrammaNode *currentNode);
+/*寻找当前子树下的变量*/
+void FindVar(GrammaNode* currentNode,int op);
+/*寻找当前子树下的结构体定义*/
+void FindStructVar(GrammaNode* currentNode);
+/*寻找函数定义*/
+void FindFunc(GrammaNode* currentNode,int op);
+/*寻找Exp的类型*/
+int FindExpType(GrammaNode* currentNode);
+/*函数的返回类型*/
+_pExpType FuncBackType(char *id);
+/*判断结构中数据成员的类型*/
+_pExpType StructBackType(char *sname,char *memName);
+/*返回变量的类型*/
+_pExpType VarBackType(char *vname);
+/*获取数组的维度*/
+void GetLat(GrammaNode* currentNode);
+/*检测Exp*/
+void CheckExpType(GrammaNode* currentNode);
+/*检测函数未定义的使用*/
+void CheckFuncDef(GrammaNode* currentNode);
+/*新增一个变量*/
+void addVar(_pVarTable pv);
+/*判断一个变量是否存在*/
+int exitVar(char*);
+/*ps->pt*/
+void CopyVar(_pVarTable pt,_pVarTable ps);
+/*新增一个局部变量*/
+void addLocalVar(_pVarTable pv);
+/*判断两个变量是否等价*/
+int isEqualVar(_pVarTable pt,_pVarTable ps);
+/*新增一个结构体定义*/
+void addStruct(_pStructTable ps);
+/*新增一个结构体变量*/
+void addStructVar(_pVarTable pv); 
+/*判断一个结构体是否存在*/
+int exitStruct(char *id);
+/*判断两个结构是否内容等价*/
+int isEqualStruct(char* id1,char* id2,int op);
+/*获取实参列表*/
+void GetRealPara(GrammaNode* currentNode);
+/*比较实参和形参*/
+int ComparePara(char *id);
+/*新增一个函数定义*/
+void addFunc(_pFuncTable pf);
+/*新增一个函数形参*/
+void addFuncPara(_pVarTable pv); 
+/*判断一个函数是否存在*/
+int exitFunc(char *id);
+/*打印函数符号表*/
+void PrintFunSimbol();
+/*打印结构符号表*/
+void PrintStructSimbol();
+/*打印变量符号表*/
+void PrintVarSimbol();
+/*打印错误*/
+void PrintError(int op,int line,char *s);
 #endif

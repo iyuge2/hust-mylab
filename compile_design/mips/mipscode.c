@@ -8,8 +8,8 @@ _pVarInf vHead = NULL;//变量信息的头指针
 void GetMipsCode()
 {
     printf("开始生成目标代码...\n");
-    InitReg();//初始化可用的寄存器
-    MipsCode();//生成目标代码
+    //InitReg();//初始化可用的寄存器
+    //MipsCode();//生成目标代码
     printf("...目标代码生成完毕\n");
 }
 
