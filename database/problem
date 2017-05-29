@@ -1,4 +1,5 @@
 (1) QSqlDatabase::addDatabase("QMYSQL");时显示QMYSQL not be loaded but availiable;
-解决办法：cd /home/iyuge2/software/Qt5.8.0/5.8/gcc_64/plugins/sqldrivers
+解决办法：首先，在.pro文件中加入"QT += sql"
+	 然后，cd /home/iyuge2/software/Qt5.8.0/5.8/gcc_64/plugins/sqldrivers
 	 ldd libqsqlmysql.so
 	 然后根据输出结果缺啥(即not found啥)装啥。
