@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Product Version: Vivado v2016.2 (64-bit)              -->
+<!-- Product Version: Vivado v2017.1 (64-bit)              -->
 <!--                                                         -->
-<!-- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.   -->
+<!-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="14" Path="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.xpr">
+<Project Version="7" Minor="20" Path="/home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="48dcadff99244c86b28ec7f717c5d488"/>
     <Option Name="Part" Val="xa7a100tcsg324-1I"/>
     <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
     <Option Name="CompiledLibDirXSim" Val=""/>
-    <Option Name="CompiledLibDirModelSim" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/modelsim"/>
-    <Option Name="CompiledLibDirQuesta" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/questa"/>
-    <Option Name="CompiledLibDirIES" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/ies"/>
-    <Option Name="CompiledLibDirVCS" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/vcs"/>
-    <Option Name="CompiledLibDirRiviera" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/riviera"/>
-    <Option Name="CompiledLibDirActivehdl" Val="/home/iyuge2/Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/activehdl"/>
+    <Option Name="CompiledLibDirModelSim" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/modelsim"/>
+    <Option Name="CompiledLibDirQuesta" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/questa"/>
+    <Option Name="CompiledLibDirIES" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/ies"/>
+    <Option Name="CompiledLibDirVCS" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/vcs"/>
+    <Option Name="CompiledLibDirRiviera" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/riviera"/>
+    <Option Name="CompiledLibDirActivehdl" Val="$PPRDIR/../../../../Study/NumLogicWork/iyuge2_DONE/EleClock/project_yu1433.cache/compile_simlib/activehdl"/>
     <Option Name="BoardPart" Val=""/>
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
+    <Option Name="IPCachePermission" Val="disable"/>
     <Option Name="EnableCoreContainer" Val="FALSE"/>
     <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
-    <Option Name="IPUserFilesDir" Val="$PPRDIR/project_yu1433.ip_user_files"/>
-    <Option Name="IPStaticSourceDir" Val="$PPRDIR/project_yu1433.ip_user_files/ipstatic"/>
+    <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
+    <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
+    <Option Name="DSANumComputeUnits" Val="16"/>
     <Option Name="WTXSimLaunchSim" Val="0"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
@@ -38,32 +40,19 @@
     <Option Name="WTVcsExportSim" Val="0"/>
     <Option Name="WTRivieraExportSim" Val="0"/>
     <Option Name="WTActivehdlExportSim" Val="0"/>
+    <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
+    <Option Name="XSimRadix" Val="hex"/>
+    <Option Name="XSimTimeUnit" Val="ns"/>
+    <Option Name="XSimArrayDisplayLimit" Val="64"/>
+    <Option Name="XSimTraceLimit" Val="65536"/>
   </Configuration>
   <FileSets Version="1" Minor="31">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PSRCDIR/sources_1/new/Count.v">
+      <File Path="$PSRCDIR/sources_1/new/CLOCK_H.v">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/Count.v"/>
-          <Attr Name="ImportTime" Val="1474703256"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/new/RING.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/RING.v"/>
-          <Attr Name="ImportTime" Val="1474709318"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/new/CLOCK_S.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_S.v"/>
-          <Attr Name="ImportTime" Val="1474658780"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_H.v"/>
+          <Attr Name="ImportTime" Val="1474658758"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -78,10 +67,28 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/new/CLOCK_H.v">
+      <File Path="$PSRCDIR/sources_1/new/CLOCK_S.v">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_H.v"/>
-          <Attr Name="ImportTime" Val="1474658758"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/CLOCK_S.v"/>
+          <Attr Name="ImportTime" Val="1474658780"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/Count.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/Count.v"/>
+          <Attr Name="ImportTime" Val="1474703256"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/RING.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../EleClock_update/EleClock_update.srcs/sources_1/new/RING.v"/>
+          <Attr Name="ImportTime" Val="1474709318"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -225,6 +232,8 @@
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <ReportStrategy/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
     <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xa7a100tcsg324-1I" ConstrsSet="constrs_1" Description="Vivado Implementation Defaults" State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
@@ -240,6 +249,8 @@
         <Step Id="write_bitstream"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <ReportStrategy/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
   </Runs>
 </Project>

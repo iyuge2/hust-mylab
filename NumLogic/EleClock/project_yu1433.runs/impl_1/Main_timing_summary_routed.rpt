@@ -1,8 +1,8 @@
-Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
-| Tool Version : Vivado v.2015.2 (win64) Build 1266856 Fri Jun 26 16:35:25 MDT 2015
-| Date         : Wed Sep 28 16:44:16 2016
-| Host         : admin03 running 64-bit Service Pack 1  (build 7601)
+| Tool Version : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
+| Date         : Thu Jun  1 15:39:34 2017
+| Host         : iyuge2PC running 64-bit Ubuntu 16.04.2 LTS
 | Command      : report_timing_summary -warn_on_violation -max_paths 10 -file Main_timing_summary_routed.rpt -rpx Main_timing_summary_routed.rpx
 | Design       : Main
 | Device       : xa7a100t-csg324
@@ -22,6 +22,8 @@ Timing Summary Report
   Enable Input Delay Default Clock           :  No
   Enable Preset / Clear Arcs                 :  No
   Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  false
 
   Corner  Analyze    Analyze    
   Name    Max Paths  Min Paths  
@@ -50,9 +52,9 @@ Table of Contents
 
 1. checking no_clock
 --------------------
- There are 99 register/latch pins with no clock driven by root clock pin: T (HIGH)
+ There are 20 register/latch pins with no clock driven by root clock pin: T (HIGH)
 
- There are 19 register/latch pins with no clock driven by root clock pin: clear (HIGH)
+ There are 12 register/latch pins with no clock driven by root clock pin: clear (HIGH)
 
  There are 5 register/latch pins with no clock driven by root clock pin: hdown (HIGH)
 
@@ -62,21 +64,11 @@ Table of Contents
 
  There are 7 register/latch pins with no clock driven by root clock pin: mup (HIGH)
 
- There are 7 register/latch pins with no clock driven by root clock pin: sdown (HIGH)
+ There are 12 register/latch pins with no clock driven by root clock pin: stop (HIGH)
 
- There are 19 register/latch pins with no clock driven by root clock pin: stop (HIGH)
+ There are 7 register/latch pins with no clock driven by root clock pin: L7/uCt_s/co_reg/Q (HIGH)
 
- There are 7 register/latch pins with no clock driven by root clock pin: sup (HIGH)
-
- There are 19 register/latch pins with no clock driven by root clock pin: L5/CLK_reg/C (HIGH)
-
- There are 34 register/latch pins with no clock driven by root clock pin: L6/CLK_reg/C (HIGH)
-
- There are 7 register/latch pins with no clock driven by root clock pin: L7/uCt_s/co_reg/C (HIGH)
-
- There are 5 register/latch pins with no clock driven by root clock pin: L8/uCt_s/co_reg/C (HIGH)
-
- There are 3 register/latch pins with no clock driven by root clock pin: uPt/usg/CLK_reg/C (HIGH)
+ There are 5 register/latch pins with no clock driven by root clock pin: L8/uCt_s/co_reg/Q (HIGH)
 
 
 2. checking constant_clock
@@ -91,21 +83,21 @@ Table of Contents
 
 4. checking unconstrained_internal_endpoints
 --------------------------------------------
- There are 276 pins that are not constrained for maximum delay. (HIGH)
+ There are 54 pins that are not constrained for maximum delay. (HIGH)
 
- There are 8 pins that are not constrained for maximum delay due to constant clock. (MEDIUM)
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
 
 
 5. checking no_input_delay
 --------------------------
- There are 12 input ports with no input delay specified. (HIGH)
+ There are 8 input ports with no input delay specified. (HIGH)
 
  There are 0 input ports with no input delay but user has a false path constraint.
 
 
 6. checking no_output_delay
 ---------------------------
- There are 19 ports with no output delay specified. (HIGH)
+ There are 21 ports with no output delay specified. (HIGH)
 
  There are 0 ports with no output delay but user has a false path constraint
 

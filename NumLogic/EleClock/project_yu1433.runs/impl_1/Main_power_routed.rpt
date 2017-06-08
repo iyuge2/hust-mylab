@@ -1,16 +1,16 @@
-Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------------
-| Tool Version     : Vivado v.2015.2 (win64) Build 1266856 Fri Jun 26 16:35:25 MDT 2015
-| Date             : Wed Sep 28 16:44:17 2016
-| Host             : admin03 running 64-bit Service Pack 1  (build 7601)
-| Command          : 
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------
+| Tool Version     : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
+| Date             : Thu Jun  1 15:39:33 2017
+| Host             : iyuge2PC running 64-bit Ubuntu 16.04.2 LTS
+| Command          : report_power -file Main_power_routed.rpt -pb Main_power_summary_routed.pb -rpx Main_power_routed.rpx
 | Design           : Main
 | Device           : xa7a100tcsg324-1I
-| Design State     : Routed
+| Design State     : routed
 | Grade            : industrial
 | Process          : typical
 | Characterization : Production
-----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------
 
 Power Report
 
@@ -30,12 +30,12 @@ Table of Contents
 ----------
 
 +--------------------------+--------+
-| Total On-Chip Power (W)  | 14.481 |
-| Dynamic (W)              | 14.162 |
-| Device Static (W)        | 0.319  |
+| Total On-Chip Power (W)  | 18.486 |
+| Dynamic (W)              | 17.957 |
+| Device Static (W)        | 0.529  |
 | Effective TJA (C/W)      | 4.6    |
-| Max Ambient (C)          | 33.9   |
-| Junction Temperature (C) | 91.1   |
+| Max Ambient (C)          | 15.7   |
+| Junction Temperature (C) | 109.3  |
 | Confidence Level         | Low    |
 | Setting File             | ---    |
 | Simulation Activity File | ---    |
@@ -49,17 +49,16 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Slice Logic    |     1.221 |      382 |       --- |             --- |
-|   LUT as Logic |     1.078 |      145 |     63400 |            0.23 |
-|   CARRY4       |     0.065 |       31 |     15850 |            0.20 |
-|   Register     |     0.065 |      152 |    126800 |            0.12 |
-|   F7/F8 Muxes  |     0.007 |        7 |     63400 |            0.01 |
+| Slice Logic    |     0.700 |       98 |       --- |             --- |
+|   LUT as Logic |     0.677 |       55 |     63400 |            0.09 |
+|   Register     |     0.017 |       20 |    126800 |            0.02 |
 |   BUFG         |     0.006 |        1 |        32 |            3.13 |
-|   Others       |     0.000 |       17 |       --- |             --- |
-| Signals        |     1.198 |      287 |       --- |             --- |
-| I/O            |    11.743 |       31 |       210 |           14.76 |
-| Static Power   |     0.319 |          |           |                 |
-| Total          |    14.481 |          |           |                 |
+|   F7/F8 Muxes  |    <0.001 |        1 |     63400 |           <0.01 |
+|   Others       |     0.000 |        7 |       --- |             --- |
+| Signals        |     0.767 |       79 |       --- |             --- |
+| I/O            |    16.490 |       34 |       210 |           16.19 |
+| Static Power   |     0.529 |          |           |                 |
+| Total          |    18.486 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -69,16 +68,16 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
 +-----------+-------------+-----------+-------------+------------+
-| Vccint    |       1.000 |     2.650 |       2.459 |      0.191 |
-| Vccaux    |       1.800 |     0.470 |       0.429 |      0.041 |
-| Vcco33    |       3.300 |     3.316 |       3.312 |      0.004 |
+| Vccint    |       1.000 |     1.848 |       1.499 |      0.349 |
+| Vccaux    |       1.800 |     1.408 |       1.345 |      0.063 |
+| Vcco33    |       3.300 |     0.018 |       0.014 |      0.004 |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
-| Vcco18    |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vcco18    |       1.800 |     7.777 |       7.773 |      0.004 |
 | Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |
 | Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |
 | Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |
 | Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |
-| Vccbram   |       1.000 |     0.005 |       0.000 |      0.005 |
+| Vccbram   |       1.000 |     0.010 |       0.000 |      0.010 |
 | MGTAVcc   |       1.000 |     0.000 |       0.000 |      0.000 |
 | MGTAVtt   |       1.200 |     0.000 |       0.000 |      0.000 |
 | Vccadc    |       1.800 |     0.020 |       0.000 |      0.020 |
@@ -136,20 +135,14 @@ Table of Contents
 +-----------+-----------+
 | Name      | Power (W) |
 +-----------+-----------+
-| Main      |    14.162 |
+| Main      |    17.957 |
 |   L10     |    <0.001 |
-|   L5      |     0.159 |
-|   L6      |     0.175 |
-|   L7      |     0.581 |
-|     uCt_s |     0.581 |
-|   L8      |     0.402 |
-|     uCt_s |     0.402 |
-|   L9      |     0.200 |
-|     uCt_s |     0.200 |
-|   uCd     |     0.246 |
-|   uPt     |     0.582 |
-|     uSn   |     0.000 |
-|     usg   |     0.176 |
+|   L7      |     0.569 |
+|     uCt_s |     0.569 |
+|   L8      |     0.493 |
+|     uCt_s |     0.493 |
+|   L9      |     0.276 |
+|     uCt_s |     0.276 |
 +-----------+-----------+
 
 

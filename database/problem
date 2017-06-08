@@ -3,3 +3,5 @@
 	 然后，cd /home/iyuge2/software/Qt5.8.0/5.8/gcc_64/plugins/sqldrivers
 	 ldd libqsqlmysql.so
 	 然后根据输出结果缺啥(即not found啥)装啥。
+(2)load file中空值为\N
+(3)qt使用过程中如果出现一次触发多个窗口，往往是存在多次触发操作。

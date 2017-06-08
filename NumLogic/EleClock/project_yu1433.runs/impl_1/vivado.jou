@@ -1,10 +1,12 @@
 #-----------------------------------------------------------
-# Vivado v2015.2 (64-bit)
-# SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
-# IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
-# Start of session at: Wed Sep 28 16:43:22 2016
-# Process ID: 3512
-# Log file: D:/project_yu1433/project_yu1433.runs/impl_1/Main.vdi
-# Journal file: D:/project_yu1433/project_yu1433.runs/impl_1\vivado.jou
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Thu Jun  1 15:38:20 2017
+# Process ID: 4084
+# Current directory: /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.runs/impl_1
+# Command line: vivado -log Main.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source Main.tcl -notrace
+# Log file: /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.runs/impl_1/Main.vdi
+# Journal file: /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.runs/impl_1/vivado.jou
 #-----------------------------------------------------------
 source Main.tcl -notrace

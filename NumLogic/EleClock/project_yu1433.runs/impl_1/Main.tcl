@@ -42,21 +42,19 @@ proc step_failed { step } {
   close $ch
 }
 
-set_msg_config -id {HDL 9-1061} -limit 100000
-set_msg_config -id {HDL 9-1654} -limit 100000
 
 start_step init_design
+set ACTIVE_STEP init_design
 set rc [catch {
   create_msg_db init_design.pb
-  set_param xicom.use_bs_reader 1
-  debug::add_scope template.lib 1
+  create_project -in_memory -part xa7a100tcsg324-1I
   set_property design_mode GateLvl [current_fileset]
-  set_property webtalk.parent_dir D:/project_yu1433/project_yu1433.cache/wt [current_project]
-  set_property parent.project_path D:/project_yu1433/project_yu1433.xpr [current_project]
-  set_property ip_repo_paths d:/project_yu1433/project_yu1433.cache/ip [current_project]
-  set_property ip_output_repo d:/project_yu1433/project_yu1433.cache/ip [current_project]
-  add_files -quiet D:/project_yu1433/project_yu1433.runs/synth_1/Main.dcp
-  read_xdc D:/project_yu1433/project_yu1433.srcs/constrs_1/new/ConMain.xdc
+  set_param project.singleFileAddWarning.threshold 0
+  set_property webtalk.parent_dir /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.cache/wt [current_project]
+  set_property parent.project_path /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.xpr [current_project]
+  set_property ip_cache_permissions disable [current_project]
+  add_files -quiet /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.runs/synth_1/Main.dcp
+  read_xdc /home/iyuge2/git/hust-mylab/NumLogic/EleClock/project_yu1433.srcs/constrs_1/new/ConMain.xdc
   link_design -top Main -part xa7a100tcsg324-1I
   close_msg_db -file init_design.pb
 } RESULT]
@@ -65,15 +63,16 @@ if {$rc} {
   return -code error $RESULT
 } else {
   end_step init_design
+  unset ACTIVE_STEP 
 }
 
 start_step opt_design
+set ACTIVE_STEP opt_design
 set rc [catch {
   create_msg_db opt_design.pb
-  catch {write_debug_probes -quiet -force debug_nets}
   opt_design 
   write_checkpoint -force Main_opt.dcp
-  catch {report_drc -file Main_drc_opted.rpt}
+  catch { report_drc -file Main_drc_opted.rpt }
   close_msg_db -file opt_design.pb
 } RESULT]
 if {$rc} {
@@ -81,12 +80,14 @@ if {$rc} {
   return -code error $RESULT
 } else {
   end_step opt_design
+  unset ACTIVE_STEP 
 }
 
 start_step place_design
+set ACTIVE_STEP place_design
 set rc [catch {
   create_msg_db place_design.pb
-  catch {write_hwdef -file Main.hwdef}
+  implement_debug_core 
   place_design 
   write_checkpoint -force Main_placed.dcp
   catch { report_io -file Main_io_placed.rpt }
@@ -99,32 +100,40 @@ if {$rc} {
   return -code error $RESULT
 } else {
   end_step place_design
+  unset ACTIVE_STEP 
 }
 
 start_step route_design
+set ACTIVE_STEP route_design
 set rc [catch {
   create_msg_db route_design.pb
   route_design 
   write_checkpoint -force Main_routed.dcp
-  catch { report_drc -file Main_drc_routed.rpt -pb Main_drc_routed.pb }
-  catch { report_timing_summary -warn_on_violation -max_paths 10 -file Main_timing_summary_routed.rpt -rpx Main_timing_summary_routed.rpx }
-  catch { report_power -file Main_power_routed.rpt -pb Main_power_summary_routed.pb }
+  catch { report_drc -file Main_drc_routed.rpt -pb Main_drc_routed.pb -rpx Main_drc_routed.rpx }
+  catch { report_methodology -file Main_methodology_drc_routed.rpt -rpx Main_methodology_drc_routed.rpx }
+  catch { report_power -file Main_power_routed.rpt -pb Main_power_summary_routed.pb -rpx Main_power_routed.rpx }
   catch { report_route_status -file Main_route_status.rpt -pb Main_route_status.pb }
   catch { report_clock_utilization -file Main_clock_utilization_routed.rpt }
+  catch { report_timing_summary -warn_on_violation -max_paths 10 -file Main_timing_summary_routed.rpt -rpx Main_timing_summary_routed.rpx }
   close_msg_db -file route_design.pb
 } RESULT]
 if {$rc} {
+  write_checkpoint -force Main_routed_error.dcp
   step_failed route_design
   return -code error $RESULT
 } else {
   end_step route_design
+  unset ACTIVE_STEP 
 }
 
 start_step write_bitstream
+set ACTIVE_STEP write_bitstream
 set rc [catch {
   create_msg_db write_bitstream.pb
+  catch { write_mem_info -force Main.mmi }
   write_bitstream -force Main.bit 
-  catch { write_sysdef -hwdef Main.hwdef -bitfile Main.bit -meminfo Main.mmi -ltxfile debug_nets.ltx -file Main.sysdef }
+  catch {write_debug_probes -no_partial_ltxfile -quiet -force debug_nets}
+  catch {file copy -force debug_nets.ltx Main.ltx}
   close_msg_db -file write_bitstream.pb
 } RESULT]
 if {$rc} {
@@ -132,5 +141,6 @@ if {$rc} {
   return -code error $RESULT
 } else {
   end_step write_bitstream
+  unset ACTIVE_STEP 
 }
 
