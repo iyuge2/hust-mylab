@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>原密码：</string>
+        <string>原密码：    </string>
        </property>
       </widget>
      </item>
@@ -27,6 +27,9 @@
       <widget class="QLineEdit" name="lineEdit_old">
        <property name="maxLength">
         <number>20</number>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
        </property>
       </widget>
      </item>
@@ -37,7 +40,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>新密码：</string>
+        <string>新密码：    </string>
        </property>
       </widget>
      </item>

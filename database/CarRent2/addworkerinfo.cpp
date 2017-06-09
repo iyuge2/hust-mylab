@@ -31,6 +31,7 @@ void AddWorkerInfo::Ok()
     QString age = ui->spinBox->text();
     QString sex = "";
     QString time = ui->dateTimeEdit->text();
+    QString wage = ui->spinBox_2->text();
     if(ui->radioButton->isChecked())
     {
         sex = "M";
@@ -52,8 +53,8 @@ void AddWorkerInfo::Ok()
         QMessageBox::information(this, "Tips", "该员工编号已存在!", QMessageBox::Ok);
         return;
     }
-    const QString temp2 = "insert into Worker values('" + name + "','" + num + "','123456','" + sex + "'," + age + ",'0','" +\
-                        time + "',null,0)";
+    const QString temp2 = "insert into Worker values('" + name + "','" + num + "','123456','" + sex + "'," + age + ",0,'" +\
+                        time + "','0'," + wage + ")";
     qDebug()<<temp2;
     if(query.exec(temp2))
     {

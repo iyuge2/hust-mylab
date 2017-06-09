@@ -5,14 +5,29 @@
 
 extern QSqlQuery query;
 extern QString Logid;
-ReviseBasicInfo::ReviseBasicInfo(QWidget *parent) :
-    QDialog(parent),
+ReviseBasicInfo::ReviseBasicInfo(QWidget *parent,int op) :
+    QDialog(parent),Sop(op),
     ui(new Ui::ReviseBasicInfo)
 {
     ui->setupUi(this);
-
-    const QString temp = "select Uname,Sex,Age from User where Uname='" + Logid + "'";
-    if(query.exec(temp))
+    int flag = 0;
+    const QString temp1 = "select Uname,Sex,Age from User where Uname='" + Logid + "'";
+    const QString temp2 = "select Wname,Sex,Age from Worker where Wnum='" + Logid + "'";
+    if(op)
+    {
+        if(query.exec(temp1))
+        {
+            flag = 1;
+        }
+    }
+    else
+    {
+        if(query.exec(temp2))
+        {
+            flag = 1;
+        }
+    }
+    if(flag)
     {
         query.next();
         //填充用户修改区
@@ -68,17 +83,34 @@ void ReviseBasicInfo::Ok()
         sex = "W";
     }
     QString age = ui->spinBox->text();
-    const QString temp = "update User set Sex = '" + sex + "',age = " + age + ",Uname = '" + Tname + \
+    const QString temp1 = "update User set Sex = '" + sex + "',age = " + age + ",Uname = '" + Tname + \
             "' where Uname = '" + Logid + "'";
-    if(!query.exec(temp))
+    const QString temp2 = "update Worker set Sex = '" + sex + "',age = " + age + ",Wname = '" + Tname + \
+            "' where Wnum = '" + Logid + "'";
+    int flag = 0;
+    if(Sop)
     {
-        QMessageBox::information(this, "Tips", "系统正忙，修改失败...!", QMessageBox::Ok);
+        if(query.exec(temp1))
+        {
+            Logid = Tname;//由触发器实现用户名变化带来的其他影响
+            flag = 1;
+        }
     }
     else
     {
-        Logid = Tname;
+        if(query.exec(temp2))
+        {
+            flag = 1;
+        }
+    }
+    if(flag)
+    {
         QMessageBox::information(this, "Tips", "修改成功!", QMessageBox::Ok);
         Cancel();
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "系统正忙，修改失败...!", QMessageBox::Ok);
     }
 }
 

@@ -19,16 +19,15 @@ Create table Worker(
         Age int(4),
         Tnum int(4),
         Ctime DATETIME,
-        Ftime DATETIME,
-        Ide Char(1)
+        Ide Char(1),
+        Bsal float(2)
     )COMMENT='员工信息表';
 Create table WorkerSal(
-        Wnum Varchar(12) primary key,
-        Bsal float(2),
-        Pride float(2),
-        Sal float(2),
+        Wnum Varchar(12),
+        Prize float(2),
+        Gtime DATETIME,
         foreign key (Wnum) references Worker(Wnum)
-    )COMMENT='员工工资表';
+    )COMMENT='员工奖金表';
 Create table CarInfo(
         Cnum Varchar(12) primary key,
         Brand Varchar(12),
@@ -54,3 +53,4 @@ Create table RentInfo(
         foreign key (Uname) references User(Uname),
         foreign key (Cnum) references CarInfo(Cnum)
     )COMMENT='租借信息表';
+insert into Worker values('iyuge2','W201414775','960606','M',24,0,'2000-10-1 08:30:00',1,0);

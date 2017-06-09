@@ -25,6 +25,11 @@ private slots:
     void DelWorker();
     void DelUser();
     void QueryRent();
+    void ChangeBasic();
+    void ChangePass();
+    void AddWage();
+    void GivePrize();
+    void QueryMoney();
 private:
     void CarInfo_Show();
     void WorkerInfo_Show();
@@ -37,6 +42,7 @@ private:
  * op==4 显示特定时间
  */
     void RentInfo_Show(int op = 0);
+    void BasicShow();
 private:
     Ui::SysLogin *ui;
 };

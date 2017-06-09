@@ -23,6 +23,8 @@ private slots:
     void DelUser();
     void QueryRent();
     void DealRequest();
+    void ChangeBasic();
+    void ChangePass();
 private:
     void CarInfo_Show();
     void UserInfo_Show();
@@ -34,6 +36,7 @@ private:
  * op==4 显示特定时间
  */
     void RentInfo_Show(int op = 0);
+    void BasicShow();
 private:
     Ui::WorkerLogin *ui;
 };

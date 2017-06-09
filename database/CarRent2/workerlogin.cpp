@@ -1,5 +1,7 @@
 #include "workerlogin.h"
 #include "ui_workerlogin.h"
+#include "revisebasicinfo.h"
+#include "revisepass.h"
 #include "addcarinfo.h"
 #include <QtSql/QSqlQuery>
 #include <QMessageBox>
@@ -34,6 +36,7 @@ WorkerLogin::WorkerLogin(QWidget *parent) :
     CarInfo_Show();
     UserInfo_Show();
     RentInfo_Show();
+    BasicShow();
 
     connect(ui->ExitButton,SIGNAL(clicked()),this,SLOT(Exit()));
     connect(ui->SlashButton,SIGNAL(clicked()),this,SLOT(select()));
@@ -46,6 +49,9 @@ WorkerLogin::WorkerLogin(QWidget *parent) :
 
     connect(ui->RentOkButton_2,SIGNAL(clicked()),this,SLOT(QueryRent()));
     connect(ui->DealButton,SIGNAL(clicked()),this,SLOT(DealRequest()));
+
+    connect(ui->pushButton_info,SIGNAL(clicked()),this,SLOT(ChangeBasic()));
+    connect(ui->pushButton_pass,SIGNAL(clicked()),this,SLOT(ChangePass()));
 }
 
 WorkerLogin::~WorkerLogin()
@@ -72,6 +78,10 @@ void WorkerLogin::select()
     else if(ui->tabWidget->currentIndex() == 2)
     {
         RentInfo_Show();
+    }
+    else if(ui->tabWidget->currentIndex() == 3)
+    {
+        BasicShow();
     }
 }
 
@@ -466,7 +476,18 @@ void WorkerLogin::DealRequest()
             const QString temp4 = "update User set Acn=" + QString::number(fee2,'f',2) + " where Uname='" + uname + "'";
             if(query.exec(temp4))
             {
-                QMessageBox::information(this, "Tips", "处理成功!", QMessageBox::Ok);
+                //将员工交易量加一
+                const QString temp5 = "select Tnum from Worker where Wnum='" + Logid + "'";
+                if(!query.exec(temp5) || !query.next())
+                {
+                    QMessageBox::information(this, "Tips", "员工工作量增1失败!", QMessageBox::Ok);
+                }
+                int tnum = query.value(0).toInt() + 1;
+                const QString temp6 = "update Worker set Tnum=" + QString::number(tnum) + " where Wnum='" + Logid + "'";
+                if(query.exec(temp6))
+                {
+                    QMessageBox::information(this, "Tips", "处理成功!", QMessageBox::Ok);
+                }
             }
         }
     }
@@ -475,4 +496,41 @@ void WorkerLogin::DealRequest()
         QMessageBox::information(this, "Tips", "处理失败!", QMessageBox::Ok);
     }
     RentInfo_Show();
+}
+
+void WorkerLogin::BasicShow()
+{
+    const QString temp = "select Wnum,Wname,Sex,Age,Tnum,Ctime,Ide,Bsal from Worker,WorkerSal where Worker.Wnum='" + \
+                        Logid + "' and WorkerSal.Wnum='" + Logid + "'";
+    query.exec(temp);
+    if(query.next())
+    {
+        ui->label_num->setText(query.value(0).toString());
+        ui->label_name->setText(query.value(1).toString());
+        ui->label_sex->setText((query.value(2).toString()=="M") ? "先生" : "女士");
+        ui->label_age->setText(query.value(3).toString());
+        ui->label_tnum->setText(query.value(4).toString());
+        ui->label_Ctime->setText(query.value(5).toString());
+        ui->label_Ide->setText((query.value(6).toString() == "0") ? "系统管理人员" : "普通员工");
+        ui->label_wage->setText(query.value(7).toString());
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "个人信息读取错误！", QMessageBox::Ok);
+    }
+}
+
+void WorkerLogin::ChangeBasic()
+{
+    ReviseBasicInfo* w = new ReviseBasicInfo(this);
+    w->exec();
+    delete w;
+    BasicShow();
+}
+
+void WorkerLogin::ChangePass()
+{
+    RevisePass* w = new RevisePass(this);
+    w->exec();
+    delete w;
 }

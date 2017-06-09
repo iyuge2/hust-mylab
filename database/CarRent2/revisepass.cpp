@@ -8,8 +8,8 @@
 extern QSqlQuery query;
 extern QString Logid;
 
-RevisePass::RevisePass(QWidget *parent) :
-    QDialog(parent),
+RevisePass::RevisePass(QWidget *parent,int op) :
+    QDialog(parent),Sop(op),
     ui(new Ui::RevisePass)
 {
     ui->setupUi(this);
@@ -38,14 +38,46 @@ void RevisePass::Ok()
         QMessageBox::information(this, "Tips", "新密码输入不一致！", QMessageBox::Ok);
         return;
     }
-    const QString temp = "select Ucode from User where Uname='" + Logid + "'";
-    if(query.exec(temp))
+    int flag = 0;
+    const QString temp1 = "select Ucode from User where Uname='" + Logid + "'";
+    const QString temp2 = "select Wcode from Worker where Wnum='" + Logid + "'";
+    if(Sop)
+    {
+        if(query.exec(temp2))
+        {
+            flag = 1;
+        }
+    }
+    else
+    {
+        if(query.exec(temp1))
+        {
+            flag = 1;
+        }
+    }
+    if(flag)
     {
         query.next();
         if(query.value(0).toString() == oldPass)
         {
-            const QString temp = "update User set Ucode = '" + newPass + "' where Uname = '" + Logid + "'";
-            if(query.exec(temp))
+            int flag2 = 0;
+            const QString temp1 = "update User set Ucode = '" + newPass + "' where Uname = '" + Logid + "'";
+            const QString temp2 = "update Worker set Wcode = '" + newPass + "' where Wnum = '" + Logid + "'";
+            if(Sop)
+            {
+                if(query.exec(temp2))
+                {
+                    flag2 = 1;
+                }
+            }
+            else
+            {
+                if(query.exec(temp1))
+                {
+                    flag2 = 1;
+                }
+            }
+            if(flag2)
             {
                 QMessageBox::information(this, "Tips", "修改成功!", QMessageBox::Ok);
                 Cancel();
@@ -60,14 +92,9 @@ void RevisePass::Ok()
             QMessageBox::information(this, "Tips", "原密码错误!", QMessageBox::Ok);
         }
     }
-    else
-    {
-        qDebug("查询失败！");
-    }
 }
 
 void RevisePass::Cancel()
 {
     this->close();
-//    parentWidget()->show();
 }

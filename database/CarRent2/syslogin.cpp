@@ -2,12 +2,15 @@
 #include "ui_syslogin.h"
 #include "addworkerinfo.h"
 #include "addcarinfo.h"
+#include "revisebasicinfo.h"
+#include "revisepass.h"
 #include <QtSql/QSqlQuery>
 #include <QMessageBox>
 #include <QDateTime>
 #include <QStringList>
 #include <QString>
 #include <QDebug>
+#include <QDateTimeEdit>
 
 extern QSqlQuery query;
 extern QString Logid;
@@ -24,7 +27,7 @@ SysLogin::SysLogin(QWidget *parent) :
     ui->tableWidget->setHorizontalHeaderLabels(header);
 
     //第二个Tab界面
-    header<<tr("姓名")<<tr("编号")<<tr("性别")<<tr("年龄")<<tr("业务量")<<tr("入职时间")<<tr("离职时间");
+    header<<tr("姓名")<<tr("编号")<<tr("性别")<<tr("年龄")<<tr("业务量")<<tr("入职时间")<<tr("基本工资");
     ui->tableWidget_2->setHorizontalHeaderLabels(header);
 
     //第三个界面
@@ -38,6 +41,7 @@ SysLogin::SysLogin(QWidget *parent) :
     CarInfo_Show();
     WorkerInfo_Show();
     UserInfo_Show();
+    BasicShow();
 
     connect(ui->ExitButton,SIGNAL(clicked()),this,SLOT(Exit()));
     connect(ui->SlashButton,SIGNAL(clicked()),this,SLOT(select()));
@@ -48,10 +52,17 @@ SysLogin::SysLogin(QWidget *parent) :
 
     connect(ui->AWButton,SIGNAL(clicked()),this,SLOT(AddWorker()));
     connect(ui->DWButton,SIGNAL(clicked()),this,SLOT(DelWorker()));
+    connect(ui->AddWageButton,SIGNAL(clicked()),this,SLOT(AddWage()));
+    connect(ui->PrizeButton,SIGNAL(clicked()),this,SLOT(GivePrize()));
 
     connect(ui->DUButton,SIGNAL(clicked()),this,SLOT(DelUser()));
 
-    connect(ui->RentOkButton,SIGNAL(click()),this,SLOT(QueryRent()));
+    connect(ui->RentOkButton,SIGNAL(clicked()),this,SLOT(QueryRent()));
+
+    connect(ui->QueryMoneyButton,SIGNAL(clicked()),this,SLOT(QueryMoney()));
+
+    connect(ui->pushButton_info,SIGNAL(clicked()),this,SLOT(ChangeBasic()));
+    connect(ui->pushButton_pass,SIGNAL(clicked()),this,SLOT(ChangePass()));
 }
 
 SysLogin::~SysLogin()
@@ -82,6 +93,14 @@ void SysLogin::select()
     else if(ui->tabWidget->currentIndex() == 3)
     {
         RentInfo_Show();
+    }
+    else if(ui->tabWidget->currentIndex() == 4)
+    {
+        QueryMoney();
+    }
+    else if(ui->tabWidget->currentIndex() == 5)
+    {
+        BasicShow();
     }
 }
 
@@ -124,7 +143,7 @@ void SysLogin::WorkerInfo_Show()
     int carNum = 0;
     ui->tableWidget_2->clearContents();
     query.exec("select * from Worker");
-    while(query.next() && (query.value(8).toString() == "0"))
+    while(query.next() && (query.value(7).toString() == "0"))//不显示系统管理员的信息
     {
         ui->tableWidget_2->setRowCount(carNum+1);
         QString wname = query.value(0).toString();
@@ -133,14 +152,14 @@ void SysLogin::WorkerInfo_Show()
         QString age = query.value(4).toString();
         QString tnum = query.value(5).toString();
         QString ctime = query.value(6).toString();
-        QString ftime = query.value(7).toString();
+        QString wage = query.value(8).toString();
         ui->tableWidget_2->setItem(carNum,0,new QTableWidgetItem(wname));
         ui->tableWidget_2->setItem(carNum,1,new QTableWidgetItem(wnum));
         ui->tableWidget_2->setItem(carNum,2,new QTableWidgetItem(sex));
         ui->tableWidget_2->setItem(carNum,3,new QTableWidgetItem(age));
         ui->tableWidget_2->setItem(carNum,4,new QTableWidgetItem(tnum));
         ui->tableWidget_2->setItem(carNum,5,new QTableWidgetItem(ctime));
-        ui->tableWidget_2->setItem(carNum,6,new QTableWidgetItem(ftime));
+        ui->tableWidget_2->setItem(carNum,6,new QTableWidgetItem(wage));
         carNum++;
     }
 }
@@ -296,6 +315,81 @@ void SysLogin::DelWorker()
     }
 }
 
+void SysLogin::AddWage()
+{
+    QString wage = ui->spinBox->text();
+    QString wnum0;
+    QString wnum1 = "";
+    QString wnum2 = ui->lineEdit_2->text();
+    if(ui->tableWidget_2->currentRow() != -1)
+    {
+        wnum1 = ui->tableWidget_2->item(ui->tableWidget_2->currentRow(),1)->text();
+    }
+    if(wnum2.isEmpty())
+    {
+        if(wnum1.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "当前未选中任何员工!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            wnum0 = wnum1;
+        }
+    }
+    else
+    {
+        wnum0 = wnum2;
+    }
+    const QString temp = "update Worker set Bsal=" + wage + " where Wnum='" + wnum0 + "'";
+    if(query.exec(temp))
+    {
+        QMessageBox::information(this, "Tips", "改工资成功!", QMessageBox::Ok);
+        return;
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "改工资失败!", QMessageBox::Ok);
+    }
+}
+
+void SysLogin::GivePrize()
+{
+    QString prize = ui->spinBox->text();
+    QString wnum0;
+    QString wnum1 = "";
+    QString wnum2 = ui->lineEdit_2->text();
+    if(ui->tableWidget_2->currentRow() != -1)
+    {
+        wnum1 = ui->tableWidget_2->item(ui->tableWidget_2->currentRow(),1)->text();
+    }
+    if(wnum2.isEmpty())
+    {
+        if(wnum1.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "当前未选中任何员工!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            wnum0 = wnum1;
+        }
+    }
+    else
+    {
+        wnum0 = wnum2;
+    }
+    const QString temp1 = "update WorkerSal set Prise=" + prize + " where Wnum='" + wnum0 + "'";
+    if(query.exec(temp1))
+    {
+        QMessageBox::information(this, "Tips", "发奖金成功!", QMessageBox::Ok);
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "发奖金失败!", QMessageBox::Ok);
+    }
+}
+
 void SysLogin::UserInfo_Show()
 {
     int carNum = 0;
@@ -309,7 +403,7 @@ void SysLogin::UserInfo_Show()
         QString age = query.value(3).toString();
         QString cre = query.value(4).toString();
         QString acn = query.value(5).toString();
-        QString ide = (query.value(5).toFloat() < 1000) ? "普通会员" : "黄金会员";
+        QString ide = (query.value(6).toFloat() < 1000) ? "普通会员" : "黄金会员";
         ui->tableWidget_3->setItem(carNum,0,new QTableWidgetItem(uname));
         ui->tableWidget_3->setItem(carNum,1,new QTableWidgetItem(sex));
         ui->tableWidget_3->setItem(carNum,2,new QTableWidgetItem(age));
@@ -492,4 +586,113 @@ void SysLogin::QueryRent()
         QMessageBox::information(this, "Tips", "请先选择查询方式!", QMessageBox::Ok);
         return;
     }
+}
+
+void SysLogin::QueryMoney()
+{
+    QDateTime stime = ui->dateTimeEdit->dateTime();
+    QDateTime ftime = ui->dateTimeEdit->dateTime();
+    if(stime.isNull() || ftime.isNull())
+    {
+        QMessageBox::information(this, "Tips", "请选择查询时间!", QMessageBox::Ok);
+        return;
+    }
+    //填充订单金额表
+    float cashAll = 0;
+    int carNum = 0;
+    ui->tableWidget_C->clearContents();
+    const QString temp = "select Tnum,Ftm,Cash from RentInfo";
+    query.exec(temp);
+    while(query.next())
+    {
+        ui->tableWidget_C->setRowCount(carNum+1);
+        QString tnum = query.value(0).toString();
+        QDateTime time = query.value(1).toDateTime();
+        QString cash = query.value(2).toString();
+        if(time >= stime && time <= ftime)
+        {
+            ui->tableWidget_C->setItem(carNum,0,new QTableWidgetItem(tnum));
+            ui->tableWidget_C->setItem(carNum,1,new QTableWidgetItem(time.toString()));
+            ui->tableWidget_C->setItem(carNum,2,new QTableWidgetItem(cash));
+            cashAll += cash.toFloat();
+        }
+        carNum += 1;
+    }
+    ui->label_OrderCount->setText(QString::number(carNum));
+    ui->label_OrderFee->setText(QString::number(cashAll,'f',2));
+    ui->label_in->setText(QString::number(cashAll,'f',2));
+    //填充员工工资表
+    float wageAll = 0,prizeAll = 0;
+    carNum = 0;
+    ui->tableWidget_W->clearContents();
+    int monthNum = (ftime.toTime_t() - stime.toTime_t()) / (3600 * 24 * 30);//计算出所查询的总月数，便于计算员工基本工资
+    const QString temp2 = "select Wnum,BSal,Ide from Worker";
+    query.exec(temp2);
+    while(query.next() && (query.value(2).toString() != "1"))//排除Boss
+    {
+        QString wnum = query.value(0).toString();
+        float bwage = query.value(1).toFloat();
+        QSqlQuery query2 = query;
+        float prize = 0;
+        const QString temp3 = "select Prize,Gtime from WorkSal where Wnum='" + wnum + "'";
+        query2.exec(temp3);
+        while(query2.next())//查询员工奖金总额
+        {
+            QDateTime gtime = query2.value(1).toDateTime();
+            if(gtime >= stime && gtime <= ftime)
+            {
+                prize += query2.value(0).toFloat();
+            }
+        }
+        bwage *= monthNum;
+        prizeAll += prize;
+        wageAll += bwage;
+        ui->tableWidget_W->setRowCount(carNum+1);
+        ui->tableWidget_W->setItem(carNum,0,new QTableWidgetItem(wnum));
+        ui->tableWidget_W->setItem(carNum,1,new QTableWidgetItem(QString::number(bwage,'f',2)));
+        ui->tableWidget_W->setItem(carNum,2,new QTableWidgetItem(prize));
+        prize += bwage;
+        ui->tableWidget_W->setItem(carNum,3,new QTableWidgetItem(QString::number(prize,'f',2)));
+        carNum += 1;
+    }
+    ui->label_WageAll->setText(QString::number(wageAll,'f',2));
+    ui->label_PrizeAll->setText(QString::number(prizeAll,'f',2));
+    float out = wageAll + prizeAll;
+    float left = cashAll - out;
+    ui->label_out->setText(QString::number(out,'f',2));
+    ui->label_left->setText(QString::number(left,'f',2));
+}
+
+void SysLogin::BasicShow()
+{
+    const QString temp = "select Wnum,Wname,Sex,Age,Ctime,Ide from Worker where Wnum='" + Logid + "'";
+    query.exec(temp);
+    if(query.next())
+    {
+        ui->label_num->setText(query.value(0).toString());
+        ui->label_name->setText(query.value(1).toString());
+        ui->label_sex->setText((query.value(2).toString()=="M") ? "先生" : "女士");
+        ui->label_age->setText(query.value(3).toString());
+        ui->label_Ctime->setText(query.value(4).toString());
+        ui->label_Ide->setText((query.value(5).toString() == "1") ? "Boss" : "普通员工");
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "个人信息读取错误！", QMessageBox::Ok);
+    }
+}
+
+void SysLogin::ChangeBasic()
+{
+    ReviseBasicInfo* w = new ReviseBasicInfo(this);
+    w->exec();
+    delete w;
+    BasicShow();
+}
+
+void SysLogin::ChangePass()
+{
+    RevisePass* w = new RevisePass(this);
+    w->exec();
+    delete w;
 }
