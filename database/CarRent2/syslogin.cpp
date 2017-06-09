@@ -4,6 +4,7 @@
 #include "addcarinfo.h"
 #include <QtSql/QSqlQuery>
 #include <QMessageBox>
+#include <QDateTime>
 #include <QStringList>
 #include <QString>
 #include <QDebug>
@@ -123,7 +124,7 @@ void SysLogin::WorkerInfo_Show()
     int carNum = 0;
     ui->tableWidget_2->clearContents();
     query.exec("select * from Worker");
-    while(query.next() && (query.value(8).toChar() == '0'))
+    while(query.next() && (query.value(8).toString() == "0"))
     {
         ui->tableWidget_2->setRowCount(carNum+1);
         QString wname = query.value(0).toString();
@@ -149,6 +150,7 @@ void SysLogin::AddCar()
     AddCarInfo* AcWin = new AddCarInfo(this);
     AcWin->exec();
     delete AcWin;
+    CarInfo_Show();
 }
 
 void SysLogin::DelCar()
@@ -176,15 +178,15 @@ void SysLogin::DelCar()
     {
         cnum0 = cnum2;
     }
+    const QString temp1 = "select Cnum from CarInfo where Cnum='" + cnum0 + "'";
+    query.exec(temp1);
+    if(!query.next())
+    {
+        QMessageBox::information(this, "Tips", "不存在该车编号!", QMessageBox::Ok);
+        return;
+    }
     if(QMessageBox::question(this,"question","确定删除这条车辆信息吗?",QMessageBox::Yes|QMessageBox::No))
     {
-        const QString temp1 = "select Cnum from CarInfo where Cnum='" + cnum0 + "'";
-        query.exec(temp1);
-        if(query.next())
-        {
-            QMessageBox::information(this, "Tips", "不存在该车编号!", QMessageBox::Ok);
-            return;
-        }
         const QString temp2 = "delete from CarInfo where Cnum='" + cnum0 + "'";
         if(query.exec(temp2))
         {
@@ -230,6 +232,7 @@ void SysLogin::RevCar()
         AddCarInfo* AcWin = new AddCarInfo(this,1,cnum0);
         AcWin->exec();
         delete AcWin;
+        CarInfo_Show();
     }
     else
     {
@@ -243,6 +246,7 @@ void SysLogin::AddWorker()
     AddWorkerInfo* AwWin = new AddWorkerInfo(this);
     AwWin->exec();
     delete AwWin;
+    WorkerInfo_Show();
 }
 
 void SysLogin::DelWorker()
@@ -252,7 +256,7 @@ void SysLogin::DelWorker()
     QString wnum2 = ui->lineEdit_2->text();
     if(ui->tableWidget_2->currentRow() != -1)
     {
-        wnum1 = ui->tableWidget_2->item(ui->tableWidget_2->currentRow(),0)->text();
+        wnum1 = ui->tableWidget_2->item(ui->tableWidget_2->currentRow(),1)->text();
     }
     if(wnum2.isEmpty())
     {
@@ -270,15 +274,15 @@ void SysLogin::DelWorker()
     {
         wnum0 = wnum2;
     }
+    const QString temp1 = "select Wnum from Worker where Wnum='" + wnum0 + "'";
+    query.exec(temp1);
+    if(!query.next())
+    {
+        QMessageBox::information(this, "Tips", "不存在该员工!", QMessageBox::Ok);
+        return;
+    }
     if(QMessageBox::question(this,"question","确定删除此员工吗?",QMessageBox::Yes|QMessageBox::No))
     {
-        const QString temp1 = "select Wnum from Worker where Wnum='" + wnum0 + "'";
-        query.exec(temp1);
-        if(query.next())
-        {
-            QMessageBox::information(this, "Tips", "不存在该员工!", QMessageBox::Ok);
-            return;
-        }
         const QString temp2 = "delete from Worker where Wnum='" + wnum0 + "'";
         if(query.exec(temp2))
         {
@@ -305,7 +309,7 @@ void SysLogin::UserInfo_Show()
         QString age = query.value(3).toString();
         QString cre = query.value(4).toString();
         QString acn = query.value(5).toString();
-        QString ide = (query.value(6).toString() == '0') ? "普通会员" : "黄金会员";
+        QString ide = (query.value(5).toFloat() < 1000) ? "普通会员" : "黄金会员";
         ui->tableWidget_3->setItem(carNum,0,new QTableWidgetItem(uname));
         ui->tableWidget_3->setItem(carNum,1,new QTableWidgetItem(sex));
         ui->tableWidget_3->setItem(carNum,2,new QTableWidgetItem(age));
@@ -341,20 +345,20 @@ void SysLogin::DelUser()
     {
         uname0 = uname2;
     }
+    const QString temp1 = "select Uname from User where Uname='" + uname0 + "'";
+    query.exec(temp1);
+    if(!query.next())
+    {
+        QMessageBox::information(this, "Tips", "不存在该用户!", QMessageBox::Ok);
+        return;
+    }
     if(QMessageBox::question(this,"question","确定删除此客户吗?",QMessageBox::Yes|QMessageBox::No))
     {
-        const QString temp1 = "select Uname from User where Uname='" + uname0 + "'";
-        query.exec(temp1);
-        if(query.next())
-        {
-            QMessageBox::information(this, "Tips", "不存在该用户!", QMessageBox::Ok);
-            return;
-        }
         const QString temp2 = "delete from User where Uname='" + uname0 + "'";
         if(query.exec(temp2))
         {
             QMessageBox::information(this, "Tips", "删除成功!", QMessageBox::Ok);
-            WorkerInfo_Show();
+            UserInfo_Show();
         }
         else
         {
@@ -363,13 +367,44 @@ void SysLogin::DelUser()
     }
 }
 
-void SysLogin::RentInfo_Show()
+void SysLogin::RentInfo_Show(int op)
 {
     int carNum = 0;
     ui->tableWidget_4->clearContents();
     query.exec("select * from RentInfo");
     while(query.next())
     {
+        if(op == 1)
+        {
+            if(query.value(3).toString() != ui->lineEdit_4->text())
+            {
+                continue;
+            }
+        }
+        else if(op == 2)
+        {
+            if(query.value(1).toString() != ui->lineEdit_4->text())
+            {
+                continue;
+            }
+        }
+        else if(op == 3)
+        {
+            if(query.value(2).toString() != ui->lineEdit_4->text())
+            {
+                continue;
+            }
+        }
+        else if(op == 4)
+        {
+            int s = QDateTime::fromString(query.value(4).toString()).toTime_t();
+            int s1 = QDateTime::fromString(ui->TimeEdit1->text()).toTime_t();
+            int s2 = QDateTime::fromString(ui->TimeEdit2->text()).toTime_t();
+            if(s < s1 || s > s2)
+            {
+                continue;
+            }
+        }
         ui->tableWidget_4->setRowCount(carNum+1);
         QString tnum = query.value(0).toString();
         QString wnum = query.value(1).toString();
@@ -411,5 +446,50 @@ void SysLogin::RentInfo_Show()
 
 void SysLogin::QueryRent()
 {
-    ;
+    QString con = ui->lineEdit_4->text();
+    if(ui->radioButton->isChecked())
+    {//按照车辆编号查询输出
+        if(con.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "请填充需要查询的车辆编号条件!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            RentInfo_Show(1);
+        }
+    }
+    else if(ui->radioButton_2->isChecked())
+    {//按照员工编号查询输出
+        if(con.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "请填充需要查询的员工编号条件!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            RentInfo_Show(2);
+        }
+    }
+    else if(ui->radioButton_3->isChecked())
+    {//按照客户名查询输出
+        if(con.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "请填充需要查询的客户名条件!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            RentInfo_Show(3);
+        }
+    }
+    else if(ui->radioButton_4->isChecked())
+    {//按照时间查询输出
+        RentInfo_Show(4);
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "请先选择查询方式!", QMessageBox::Ok);
+        return;
+    }
 }

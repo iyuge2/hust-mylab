@@ -2,6 +2,7 @@
 #define ADDCARINFO_H
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
 class AddCarInfo;
@@ -18,6 +19,8 @@ private slots:
     void Ok();
     void Cancel();
 private:
+    int AddOrRev;
+    QString CarNum;
     Ui::AddCarInfo *ui;
 };
 

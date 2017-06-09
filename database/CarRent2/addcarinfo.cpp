@@ -9,7 +9,7 @@ extern QSqlQuery query;
 extern QString Logid;
 
 AddCarInfo::AddCarInfo(QWidget *parent,int op,QString num) :
-    QDialog(parent),
+    QDialog(parent),AddOrRev(op),CarNum(""),
     ui(new Ui::AddCarInfo)
 {
     ui->setupUi(this);
@@ -46,7 +46,7 @@ AddCarInfo::AddCarInfo(QWidget *parent,int op,QString num) :
         query.exec(temp);
         if(query.next())
         {
-            QString cnum = query.value(0).toString();
+            CarNum = query.value(0).toString();
             QString brand = query.value(1).toString();
             QString color = query.value(2).toString();
             QString sta = query.value(3).toString();
@@ -56,14 +56,14 @@ AddCarInfo::AddCarInfo(QWidget *parent,int op,QString num) :
             QString ree = query.value(7).toString();
             QString vip = query.value(8).toString();
 
-            ui->lineEdit_cnum->setText(cnum);
+            ui->lineEdit_cnum->setText(CarNum);
             ui->lineEdit_fee->setText(fee);
             ui->lineEdit_ree->setText(ree);
             ui->lineEdit_time->setText(btime);
             ui->lineEdit_cash->setText(cash);
-            ui->comboBox->currentTextChanged(brand);
-            ui->comboBox_2->currentTextChanged(color);
-            if(sta == "A")
+            ui->comboBox->setCurrentText(brand);
+            ui->comboBox_2->setCurrentText(color);
+            if(sta == "A")//设置只有当车辆处于空闲状态时才能更改车辆编号
             {
                 ui->radioButton_3->setChecked(1);
             }
@@ -134,24 +134,52 @@ void AddCarInfo::Ok()
         QMessageBox::information(this, "Tips", "请将信息填写完整！", QMessageBox::Ok);
         return;
     }
-    const QString temp = "select Cnum from CarInfo where Cnum='" + cnum + "'";
-    query.exec(temp);
-    if(query.next())//查找成功，车牌编号已存在
-    {
-        QMessageBox::information(this, "Tips", "该车牌编号已存在!", QMessageBox::Ok);
-        return;
-    }
-    const QString temp2 = "insert into CarInfo values('" + cnum + "','" + brand + "','" + color + "','" + sta + "'," + fee + ",'" +\
-                        time + "'," + cash + "," + ree + ",'" + vip + "')";
-    if(query.exec(temp2))
-    {
-        QMessageBox::information(this, "Tips", "OK!", QMessageBox::Ok);
-        Cancel();
+    if(AddOrRev)
+    {//执行update
+        if(CarNum != cnum)
+        {
+            const QString temp = "select Cnum from CarInfo where Cnum='" + cnum + "'";
+            query.exec(temp);
+            if(query.next())//查找成功，车牌编号已存在
+            {
+                QMessageBox::information(this, "Tips", "该车牌编号已存在!", QMessageBox::Ok);
+                return;
+            }
+        }
+        const QString temp2 = "update CarInfo set Cnum='" + cnum + "',Brand='" + brand + "',Color='" + color + "',Sta='" + sta + \
+                "',Fee=" + fee + ",Btime='" + time + "',Cash=" + cash + ",Ree=" + ree + ",Vip='" + vip + "' where Cnum='" + CarNum + "'";
+        if(query.exec(temp2))
+        {
+            QMessageBox::information(this, "Tips", "OK!", QMessageBox::Ok);
+            Cancel();
+        }
+        else
+        {
+            QMessageBox::information(this, "Tips", "Oh~no!", QMessageBox::Ok);
+        }
     }
     else
-    {
-        QMessageBox::information(this, "Tips", "Oh~no!", QMessageBox::Ok);
+    {//执行insert
+        const QString temp = "select Cnum from CarInfo where Cnum='" + cnum + "'";
+        query.exec(temp);
+        if(query.next())//查找成功，车牌编号已存在
+        {
+            QMessageBox::information(this, "Tips", "该车牌编号已存在!", QMessageBox::Ok);
+            return;
+        }
+        const QString temp2 = "insert into CarInfo values('" + cnum + "','" + brand + "','" + color + "','" + sta + "'," + fee + ",'" +\
+                                time + "'," + cash + "," + ree + ",'" + vip + "')";
+        if(query.exec(temp2))
+        {
+            QMessageBox::information(this, "Tips", "OK!", QMessageBox::Ok);
+            Cancel();
+        }
+        else
+        {
+            QMessageBox::information(this, "Tips", "Oh~no!", QMessageBox::Ok);
+        }
     }
+
 }
 
 void AddCarInfo::Cancel()

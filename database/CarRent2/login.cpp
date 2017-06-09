@@ -62,7 +62,7 @@ void Login::logIn()
             {
                 flag = 0;
                 Logid = user;
-                if(query.value(1).toChar() == '0')//员工登录
+                if(query.value(1).toString() == "0")//员工登录
                 {
                     WorkerLogin* workWin = new WorkerLogin(this);
                     this->hide();

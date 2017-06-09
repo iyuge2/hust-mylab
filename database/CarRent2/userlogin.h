@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+const int MAXTNUM = 10000000;//设置最大允许的订单数
 namespace Ui {
 class UserLogin;
 }
@@ -20,6 +21,8 @@ private slots:
     void CarInfo_Show();
     void Rent();
 
+    void ShowMyOrder();
+    void FinishOrder();
     void ReviseBasic();
     void AddMoney();
     void ChangePass();

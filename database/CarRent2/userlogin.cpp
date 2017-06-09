@@ -5,6 +5,7 @@
 #include "revisepass.h"
 #include <QListWidget>
 #include <QLabel>
+#include <QTime>
 #include <QString>
 #include <QStringList>
 #include <QMessageBox>
@@ -19,19 +20,18 @@ UserLogin::UserLogin(QWidget *parent) :
     ui(new Ui::UserLogin)
 {
     ui->setupUi(this);
-    //第一个Tab界面
-    QStringList header;
-    header<<tr("车辆编号")<<tr("品牌")<<tr("颜色")<<tr("车辆状态")<<tr("购入费用")<<tr("所需押金")<<tr("租金(/h)")<<tr("其他");
-    ui->tableWidget->setHorizontalHeaderLabels(header);
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
-    //第三个界面
     ShowBasic();
-
     CarInfo_Show();
+    ShowMyOrder();
     connect(ui->ExitButton,SIGNAL(clicked()),this,SLOT(Exit()));
 
     connect(ui->SlashButton,SIGNAL(clicked()),this,SLOT(CarInfo_Show()));
     connect(ui->RentButton,SIGNAL(clicked()),this,SLOT(Rent()));
+
+    connect(ui->FOButton,SIGNAL(clicked()),this,SLOT(FinishOrder()));
+    connect(ui->SlashButton_2,SIGNAL(clicked()),this,SLOT(ShowMyOrder()));
 
     connect(ui->BasicButton,SIGNAL(clicked()),this,SLOT(ReviseBasic()));
     connect(ui->AccountButton,SIGNAL(clicked()),this,SLOT(AddMoney()));
@@ -79,21 +79,249 @@ void UserLogin::CarInfo_Show()
 
 void UserLogin::Rent()
 {
-    ;
+    QString tnum = "";
+    QString cnum0;
+    QString cnum1 = "";
+    QString cnum2 = ui->lineEdit->text();
+    if(ui->tableWidget->currentRow() != -1)
+    {
+        cnum1 = ui->tableWidget->item(ui->tableWidget->currentRow(),0)->text();
+    }
+    if(cnum2.isEmpty())
+    {
+        if(cnum1.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "您未选择任何车辆!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            cnum0 = cnum1;
+        }
+    }
+    else
+    {
+        cnum0 = cnum2;
+    }
+    const QString temp0 = "select Sta,Cash,Vip from CarInfo where Cnum='" + cnum0 + "'";
+    const QString temp1 = "select Acn,Cre from User where Uname='" + Logid + "'";
+    float ree = 0,acn = 0;
+    QString cre = "",vip = "";
+    query.exec(temp0);
+    if(query.next())
+    {
+        if(query.value(0).toString() == "B")
+        {
+            QMessageBox::information(this, "Tips", "这辆车已经被别人抢走了!", QMessageBox::Ok);
+            return;
+        }
+        else if(query.value(0).toString() == "C")
+        {
+            QMessageBox::information(this, "Tips", "这辆车还在修养之中!", QMessageBox::Ok);
+            return;
+        }
+        ree = query.value(1).toFloat();
+        vip = query.value(2).toString();
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "oh~no,这辆车不见了...!", QMessageBox::Ok);
+        return;
+    }
+    query.exec(temp1);
+    if(query.next())
+    {
+        acn = query.value(0).toFloat();
+        cre = query.value(1).toString();
+        if((vip == "Y") && (acn < 1000))
+        {
+            QMessageBox::information(this, "Tips", "很抱歉，您不是vip用户\n无法使用此车!", QMessageBox::Ok);
+            return;
+        }
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "系统异常!", QMessageBox::Ok);
+        return;
+    }
+    //根据用户信用等级判断用户账户余额是否满足租车条件
+    if(((cre == "A") && (acn < 100))|| //A等级免押金，但需要账户余额大于100，避免不能正常缴费
+       ((cre == "B") && (acn < ree)) || //B等级正常押金
+       ((cre == "C") && (acn < ree*1.2)) ||//C等级1.2倍押金
+       ((cre == "D") && (acn < ree*2)))//D等级2倍押金
+    {
+        QMessageBox::information(this, "Tips", "账户余额不足!", QMessageBox::Ok);
+        return;
+    }
+    const QString temp2 = "select Wnum from RentInfo where Uname='" + Logid + "'";
+    query.exec(temp2);
+    qDebug()<<temp2;
+    while(query.next())
+    {
+        if(query.value(0).toString() == "W000000000")
+        {
+            QMessageBox::information(this, "Tips", "您当前还有未完成订单！", QMessageBox::Ok);
+            return;
+        }
+    }
+        while(1)
+        {//获得一个有效的订单编号
+            tnum = "T" + QString::number(qrand()%MAXTNUM);
+            const QString temp3 = "select Tnum from RentInfo where Tnum='" + tnum + "'";
+            query.exec(temp3);
+            if(!query.next())
+            {
+                break;
+            }
+        }
+        const QString temp4 = "insert into RentInfo values('" + tnum + "','W000000000','" + Logid + "','" + cnum0 + \
+                "','" + QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + "',null,0,0,'A',0)";
+        qDebug()<<temp4;
+        if(query.exec(temp4))
+        {
+            QMessageBox::information(this, "Tips", "租车成功，请平安驾驶！", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            QMessageBox::information(this, "Tips", "系统异常，租车失败！", QMessageBox::Ok);
+            return;
+        }
+}
+
+void UserLogin::ShowMyOrder()
+{
+    int carNum = 0;
+    ui->tableWidget->clearContents();
+    const QString temp = "select * from RentInfo where Uname='" + Logid + "'";
+    query.exec(temp);
+    while(query.next())
+    {
+        ui->tableWidget_2->setRowCount(carNum+1);
+        QString tnum = query.value(0).toString();
+        QString cnum = query.value(3).toString();
+        QDateTime stime = query.value(4).toDateTime();
+        QDateTime ftime = query.value(5).toDateTime();
+        QString OrderStatus = (query.value(1).toString() == "W000000000") ? "结束申请处理中..." : "已完成";
+        float ree = 0;
+        int Rtime = 0;//行程时间
+        QSqlQuery query2 = query;
+        const QString temp2 = "select Ree from CarInfo where Cnum='" + cnum + "'";
+        query2.exec(temp2);
+        if(query2.next())
+        {
+            ree = query2.value(0).toFloat();
+        }
+        if(query.value(5).toString().isEmpty())//表示未完成形程
+        {
+            Rtime = QDateTime::currentDateTime().toTime_t() - stime.toTime_t();
+            OrderStatus = "正在行驶中...";
+        }
+        else
+        {
+            Rtime = ftime.toTime_t() - stime.toTime_t();
+        }
+        ree = ree * Rtime / 3600.0;
+        QString fee = QString::number(ree,'f',2);
+        QString fine = query.value(6).toString();
+        QString allFee = QString::number((ree + query.value(6).toFloat()),'f',2);
+        ui->tableWidget_2->setItem(carNum,0,new QTableWidgetItem(tnum));
+        ui->tableWidget_2->setItem(carNum,1,new QTableWidgetItem(OrderStatus));
+        ui->tableWidget_2->setItem(carNum,2,new QTableWidgetItem(cnum));
+        ui->tableWidget_2->setItem(carNum,3,new QTableWidgetItem(stime.toString()));
+        ui->tableWidget_2->setItem(carNum,4,new QTableWidgetItem(ftime.toString()));
+        ui->tableWidget_2->setItem(carNum,5,new QTableWidgetItem(fee));
+        ui->tableWidget_2->setItem(carNum,6,new QTableWidgetItem(fine));
+        ui->tableWidget_2->setItem(carNum,7,new QTableWidgetItem(allFee));
+        carNum++;
+    }
+}
+
+void UserLogin::FinishOrder()
+{
+    QString tnum0;
+    QString tnum1 = "";
+    QString tnum2 = ui->lineEdit_2->text();
+    if(ui->tableWidget_2->currentRow() != -1)
+    {
+        tnum1 = ui->tableWidget_2->item(ui->tableWidget_2->currentRow(),0)->text();
+    }
+    if(tnum2.isEmpty())
+    {
+        if(tnum1.isEmpty())
+        {
+            QMessageBox::information(this, "Tips", "当前未选中任何行程!", QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            tnum0 = tnum1;
+        }
+    }
+    else
+    {
+        tnum0 = tnum2;
+    }
+    const QString temp = "select Wnum,Uname,Stm,Cnum from RentInfo where Tnum='" + tnum0 + "'";
+    query.exec(temp);
+    if(query.next())
+    {
+        if(query.value(1).toString() == Logid)
+        {
+            if(query.value(0).toString() != "W000000000")
+            {
+                QMessageBox::information(this, "Tips", "该订单已完成!", QMessageBox::Ok);
+                return;
+            }
+
+        }
+        else
+        {
+            QMessageBox::information(this, "Tips", "您没有该订单编号!", QMessageBox::Ok);
+            return;
+        }
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "该订单不存在!", QMessageBox::Ok);
+        return;
+    }
+    QString cnum = query.value(3).toString();
+    QDateTime s1 = query.value(2).toDateTime();
+    QDateTime s2 = QDateTime::currentDateTime();
+    float ree = 0;
+    const QString temp2 = "select Ree from CarInfo where Cnum='" + cnum + "'";
+    query.exec(temp2);
+    if(query.next())
+    {
+        ree = query.value(0).toFloat();
+    }
+    ree = ree * (s2.toTime_t() - s1.toTime_t()) / 3600.0;
+    //提交订单结束申请
+    const QString temp3 = "update RentInfo set Ftm='" +  s2.toString("yyyy-MM-dd hh:mm:ss") + "',Cash='" + QString::number(ree,'f',2) +\
+                         "',AllFee='" + QString::number(ree,'f',2) + "' where Tnum='" + tnum0 + "'";
+    if(query.exec(temp3))
+    {
+        QMessageBox::information(this, "Tips", "订单结束请求已提交!", QMessageBox::Ok);
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "订单结束请求提交失败!", QMessageBox::Ok);
+    }
 }
 
 void UserLogin::ShowBasic()
 {
-    const QString temp = "select Uname,Sex,Age,Cre,Acn,Ide from User where Uname='" + Logid + "'";
-    if(query.exec(temp))
+    const QString temp = "select Uname,Sex,Age,Cre,Acn from User where Uname='" + Logid + "'";
+    query.exec(temp);
+    if(query.next())
     {
-        query.next();
         ui->label_name->setText(query.value(0).toString());
         ui->label_sex->setText((query.value(1).toString()=="M") ? "先生" : "女士");
         ui->label_age->setText(query.value(2).toString());
         ui->label_credit->setText(query.value(3).toString());
         ui->label_account->setText(query.value(4).toString());
-        ui->label_grade->setText((query.value(5).toString() == "0") ? "普通会员" : "黄金会员");
+        ui->label_grade->setText((query.value(4).toFloat() < 1000) ? "普通会员" : "黄金会员");
     }
     else
     {
