@@ -27,8 +27,7 @@ SOURCES += main.cpp \
     deposit.cpp \
     revisepass.cpp \
     addcarinfo.cpp \
-    addworkerinfo.cpp \
-    rentcar.cpp
+    addworkerinfo.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -52,8 +51,7 @@ FORMS += \
     deposit.ui \
     revisepass.ui \
     addcarinfo.ui \
-    addworkerinfo.ui \
-    rentcar.ui
+    addworkerinfo.ui
 
 HEADERS += \
     login.h \
@@ -67,5 +65,4 @@ HEADERS += \
     deposit.h \
     revisepass.h \
     addcarinfo.h \
-    addworkerinfo.h \
-    rentcar.h
+    addworkerinfo.h

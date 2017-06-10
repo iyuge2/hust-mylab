@@ -37,9 +37,8 @@ void Login::logIn()
     if(ui->radioButton->isChecked())//用户登录判断
     {
         const QString temp = "select Ucode from User where Uname='" + user + "'";
-        if(query.exec(temp))
+        if(query.exec(temp) && query.next())
         {
-            query.next();
             if(query.value(0).toString() == pass)
             {
                 flag = 0;
@@ -55,9 +54,8 @@ void Login::logIn()
     {
         const QString temp = "select Wcode,Ide from Worker where Wnum='" + user + "'";
         qDebug()<<temp;
-        if(query.exec(temp))
+        if(query.exec(temp) && query.next())
         {
-            query.next();
             if(query.value(0).toString() == pass)
             {
                 flag = 0;

@@ -27,11 +27,10 @@ UserLogin::UserLogin(QWidget *parent) :
     ShowMyOrder();
     connect(ui->ExitButton,SIGNAL(clicked()),this,SLOT(Exit()));
 
-    connect(ui->SlashButton,SIGNAL(clicked()),this,SLOT(CarInfo_Show()));
+    connect(ui->SlashButton,SIGNAL(clicked()),this,SLOT(select()));
     connect(ui->RentButton,SIGNAL(clicked()),this,SLOT(Rent()));
 
     connect(ui->FOButton,SIGNAL(clicked()),this,SLOT(FinishOrder()));
-    connect(ui->SlashButton_2,SIGNAL(clicked()),this,SLOT(ShowMyOrder()));
 
     connect(ui->BasicButton,SIGNAL(clicked()),this,SLOT(ReviseBasic()));
     connect(ui->AccountButton,SIGNAL(clicked()),this,SLOT(AddMoney()));
@@ -43,6 +42,21 @@ UserLogin::~UserLogin()
     delete ui;
 }
 
+void UserLogin::select()
+{
+    if(ui->tabWidget->currentIndex() == 0)
+    {
+        CarInfo_Show();
+    }
+    else if(ui->tabWidget->currentIndex() == 1)
+    {
+        ShowMyOrder();
+    }
+    else if(ui->tabWidget->currentIndex() == 2)
+    {
+        ShowBasic();
+    }
+}
 void UserLogin::CarInfo_Show()
 {
     int carNum = 0;
@@ -56,9 +70,9 @@ void UserLogin::CarInfo_Show()
         QString color = query.value(2).toString();
         QString status = query.value(3).toString();
         QString fee = query.value(4).toString();
-        QString cash = query.value(5).toString();
-        QString ree = query.value(6).toString();
-        QString vip = (query.value(7).toString() == "Y" ? "仅限vip" : "无");
+        QString cash = query.value(6).toString();
+        QString ree = query.value(7).toString();
+        QString vip = (query.value(8).toString() == "Y" ? "仅限vip" : "无");
         if(status == "A")
             status = "空闲";
         else if(status == "B")
@@ -133,7 +147,7 @@ void UserLogin::Rent()
     {
         acn = query.value(0).toFloat();
         cre = query.value(1).toString();
-        if((vip == "Y") && (acn < 1000))
+        if((vip == "Y") && (acn < 10000))
         {
             QMessageBox::information(this, "Tips", "很抱歉，您不是vip用户\n无法使用此车!", QMessageBox::Ok);
             return;
@@ -155,7 +169,6 @@ void UserLogin::Rent()
     }
     const QString temp2 = "select Wnum from RentInfo where Uname='" + Logid + "'";
     query.exec(temp2);
-    qDebug()<<temp2;
     while(query.next())
     {
         if(query.value(0).toString() == "W000000000")
@@ -175,11 +188,11 @@ void UserLogin::Rent()
             }
         }
         const QString temp4 = "insert into RentInfo values('" + tnum + "','W000000000','" + Logid + "','" + cnum0 + \
-                "','" + QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + "',null,0,0,'A',0)";
-        qDebug()<<temp4;
-        if(query.exec(temp4))
+                "','" + QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + "',null,0,0,'A')";
+        const QString temp5 = "update CarInfo set Sta='B' where Cnum='" + cnum0 + "'";
+        if(query.exec(temp4) && query.exec(temp5))
         {
-            QMessageBox::information(this, "Tips", "租车成功，请平安驾驶！", QMessageBox::Ok);
+            QMessageBox::information(this, "Tips", "租车成功，请平安驾驶！", QMessageBox::Ok);          
             return;
         }
         else
@@ -203,28 +216,9 @@ void UserLogin::ShowMyOrder()
         QDateTime stime = query.value(4).toDateTime();
         QDateTime ftime = query.value(5).toDateTime();
         QString OrderStatus = (query.value(1).toString() == "W000000000") ? "结束申请处理中..." : "已完成";
-        float ree = 0;
-        int Rtime = 0;//行程时间
-        QSqlQuery query2 = query;
-        const QString temp2 = "select Ree from CarInfo where Cnum='" + cnum + "'";
-        query2.exec(temp2);
-        if(query2.next())
-        {
-            ree = query2.value(0).toFloat();
-        }
-        if(query.value(5).toString().isEmpty())//表示未完成形程
-        {
-            Rtime = QDateTime::currentDateTime().toTime_t() - stime.toTime_t();
-            OrderStatus = "正在行驶中...";
-        }
-        else
-        {
-            Rtime = ftime.toTime_t() - stime.toTime_t();
-        }
-        ree = ree * Rtime / 3600.0;
-        QString fee = QString::number(ree,'f',2);
-        QString fine = query.value(6).toString();
-        QString allFee = QString::number((ree + query.value(6).toFloat()),'f',2);
+        QString fee = query.value(6).toString();
+        QString fine = query.value(7).toString();
+        QString allFee = QString::number((fee.toFloat() + fine.toFloat()),'f',2);
         ui->tableWidget_2->setItem(carNum,0,new QTableWidgetItem(tnum));
         ui->tableWidget_2->setItem(carNum,1,new QTableWidgetItem(OrderStatus));
         ui->tableWidget_2->setItem(carNum,2,new QTableWidgetItem(cnum));
@@ -273,7 +267,6 @@ void UserLogin::FinishOrder()
                 QMessageBox::information(this, "Tips", "该订单已完成!", QMessageBox::Ok);
                 return;
             }
-
         }
         else
         {
@@ -298,8 +291,8 @@ void UserLogin::FinishOrder()
     }
     ree = ree * (s2.toTime_t() - s1.toTime_t()) / 3600.0;
     //提交订单结束申请
-    const QString temp3 = "update RentInfo set Ftm='" +  s2.toString("yyyy-MM-dd hh:mm:ss") + "',Cash='" + QString::number(ree,'f',2) +\
-                         "',AllFee='" + QString::number(ree,'f',2) + "' where Tnum='" + tnum0 + "'";
+    const QString temp3 = "update RentInfo set Ftm='" +  s2.toString("yyyy-MM-dd hh:mm:ss") + "',Cash=" + QString::number(ree,'f',2) +\
+                                " where Tnum='" + tnum0 + "'";
     if(query.exec(temp3))
     {
         QMessageBox::information(this, "Tips", "订单结束请求已提交!", QMessageBox::Ok);
@@ -313,15 +306,14 @@ void UserLogin::FinishOrder()
 void UserLogin::ShowBasic()
 {
     const QString temp = "select Uname,Sex,Age,Cre,Acn from User where Uname='" + Logid + "'";
-    query.exec(temp);
-    if(query.next())
+    if(query.exec(temp) && query.next())
     {
         ui->label_name->setText(query.value(0).toString());
         ui->label_sex->setText((query.value(1).toString()=="M") ? "先生" : "女士");
         ui->label_age->setText(query.value(2).toString());
         ui->label_credit->setText(query.value(3).toString());
         ui->label_account->setText(query.value(4).toString());
-        ui->label_grade->setText((query.value(4).toFloat() < 1000) ? "普通会员" : "黄金会员");
+        ui->label_grade->setText((query.value(4).toFloat() < 10000) ? "普通会员" : "黄金会员");
     }
     else
     {

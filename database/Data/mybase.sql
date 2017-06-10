@@ -8,8 +8,7 @@ Create table User(
         Sex char(1),
         Age int(4),
         Cre Char(1),
-        Acn float(2),
-        Ide char(1)
+        Acn float(2)
     )COMMENT='用户表';
 Create table Worker(
         Wname Varchar(20), 
@@ -54,3 +53,6 @@ Create table RentInfo(
         foreign key (Cnum) references CarInfo(Cnum)
     )COMMENT='租借信息表';
 insert into Worker values('iyuge2','W201414775','960606','M',24,0,'2000-10-1 08:30:00',1,0);
+insert into Worker values('sys1','W000000000','W000000000','M',24,0,'2000-10-1 08:30:00',1,0);
+insert into Worker values('sys2','W000000001','W000000001','M',24,0,'2000-10-1 08:30:00',1,0);
+insert into User values('U000000','U000000','M',0,'A',0);

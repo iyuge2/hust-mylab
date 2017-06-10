@@ -15,14 +15,14 @@ ReviseBasicInfo::ReviseBasicInfo(QWidget *parent,int op) :
     const QString temp2 = "select Wname,Sex,Age from Worker where Wnum='" + Logid + "'";
     if(op)
     {
-        if(query.exec(temp1))
+        if(query.exec(temp2))
         {
             flag = 1;
         }
     }
     else
     {
-        if(query.exec(temp2))
+        if(query.exec(temp1))
         {
             flag = 1;
         }
@@ -32,6 +32,10 @@ ReviseBasicInfo::ReviseBasicInfo(QWidget *parent,int op) :
         query.next();
         //填充用户修改区
         ui->lineEdit_name->setText(query.value(0).toString());
+        if(!op)
+        {
+            ui->lineEdit_name->setEnabled(0);//设置用户名为不可更改
+        }
         if(query.value(1).toString() == "M")
         {
             ui->radioButton_M->setChecked(1);
@@ -61,7 +65,7 @@ void ReviseBasicInfo::Ok()
         QMessageBox::information(this, "Tips", "用户名不能为空!", QMessageBox::Ok);
         return;
     }
-    else if(Tname != Logid)
+    else if(!Sop && Tname != Logid)
     {
         query.exec("select Uname from User");
         while(query.next())
@@ -90,15 +94,14 @@ void ReviseBasicInfo::Ok()
     int flag = 0;
     if(Sop)
     {
-        if(query.exec(temp1))
+        if(query.exec(temp2))
         {
-            Logid = Tname;//由触发器实现用户名变化带来的其他影响
             flag = 1;
         }
     }
     else
     {
-        if(query.exec(temp2))
+        if(query.exec(temp1))
         {
             flag = 1;
         }

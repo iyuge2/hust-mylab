@@ -7,7 +7,9 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QStringList>
+#include <QDateTime>
 #include <QString>
+#include <QChar>
 #include <QDebug>
 #include <QComboBox>
 
@@ -19,19 +21,6 @@ WorkerLogin::WorkerLogin(QWidget *parent) :
     ui(new Ui::WorkerLogin)
 {
     ui->setupUi(this);
-
-    //第一个Tab界面
-    QStringList header;
-    header<<tr("车辆编号")<<tr("品牌")<<tr("颜色")<<tr("车辆状态")<<tr("购入费用")<<tr("所需押金")<<tr("租金(/h)")<<tr("其他");
-    ui->tableWidget_5->setHorizontalHeaderLabels(header);
-
-    //第三个界面
-    header<<tr("用户名")<<tr("性别")<<tr("年龄")<<tr("信用评级")<<tr("账户余额")<<tr("其他");
-    ui->tableWidget_7->setHorizontalHeaderLabels(header);
-
-    //第三个界面
-    header<<tr("交易编号")<<tr("员工编号")<<tr("用户名")<<tr("车辆编号")<<tr("开始时间")<<tr("结束时间")<<tr("费用")<<tr("违罚款")<<tr("总费用");
-    ui->tableWidget_8->setHorizontalHeaderLabels(header);
 
     CarInfo_Show();
     UserInfo_Show();
@@ -98,9 +87,9 @@ void WorkerLogin::CarInfo_Show()
         QString color = query.value(2).toString();
         QString status = query.value(3).toString();
         QString fee = query.value(4).toString();
-        QString cash = query.value(5).toString();
-        QString ree = query.value(6).toString();
-        QString vip = (query.value(7).toString() == "Y" ? "仅限vip" : "无");
+        QString cash = query.value(6).toString();
+        QString ree = query.value(7).toString();
+        QString vip = (query.value(8).toString() == "Y" ? "仅限vip" : "无");
         if(status == "A")
             status = "空闲";
         else if(status == "B")
@@ -220,7 +209,7 @@ void WorkerLogin::UserInfo_Show()
 {
     int carNum = 0;
     ui->tableWidget_7->clearContents();
-    query.exec("select * from User");
+    query.exec("select * from User where Uname != 'U000000'");
     while(query.next())
     {
         ui->tableWidget_7->setRowCount(carNum+1);
@@ -229,7 +218,7 @@ void WorkerLogin::UserInfo_Show()
         QString age = query.value(3).toString();
         QString cre = query.value(4).toString();
         QString acn = query.value(5).toString();
-        QString ide = (query.value(5).toFloat() < 1000) ? "普通会员" : "黄金会员";
+        QString ide = (query.value(5).toFloat() < 10000) ? "普通会员" : "黄金会员";
         ui->tableWidget_7->setItem(carNum,0,new QTableWidgetItem(uname));
         ui->tableWidget_7->setItem(carNum,1,new QTableWidgetItem(sex));
         ui->tableWidget_7->setItem(carNum,2,new QTableWidgetItem(age));
@@ -303,7 +292,8 @@ void WorkerLogin::RentInfo_Show(int op)
         }
         else if(op == 2)
         {
-            if(query.value(1).toString() != "W000000000")
+            if(!((query.value(1).toString() == "W000000000") &&
+                    !query.value(5).toString().isEmpty()))
             {
                 continue;
             }
@@ -317,9 +307,9 @@ void WorkerLogin::RentInfo_Show(int op)
         }
         else if(op == 4)
         {
-            int s = QDateTime::fromString(query.value(4).toString()).toTime_t();
-            int s1 = QDateTime::fromString(ui->TimeEdit1_2->text()).toTime_t();
-            int s2 = QDateTime::fromString(ui->TimeEdit2_2->text()).toTime_t();
+            QDateTime s = query.value(4).toDateTime();
+            QDateTime s1 = ui->TimeEdit1_2->dateTime();
+            QDateTime s2 = ui->TimeEdit2_2->dateTime();
             if(s < s1 || s > s2)
             {
                 continue;
@@ -351,6 +341,7 @@ void WorkerLogin::RentInfo_Show(int op)
         {
             csta = "差";
         }
+        float allfee = cash.toFloat() + fine.toFloat();
         ui->tableWidget_8->setItem(carNum,0,new QTableWidgetItem(tnum));
         ui->tableWidget_8->setItem(carNum,1,new QTableWidgetItem(wnum));
         ui->tableWidget_8->setItem(carNum,2,new QTableWidgetItem(uname));
@@ -359,7 +350,8 @@ void WorkerLogin::RentInfo_Show(int op)
         ui->tableWidget_8->setItem(carNum,5,new QTableWidgetItem(ftime));
         ui->tableWidget_8->setItem(carNum,6,new QTableWidgetItem(cash));
         ui->tableWidget_8->setItem(carNum,7,new QTableWidgetItem(fine));
-        ui->tableWidget_8->setItem(carNum,8,new QTableWidgetItem(csta));
+        ui->tableWidget_8->setItem(carNum,8,new QTableWidgetItem(QString::number(allfee,'f',2)));
+        ui->tableWidget_8->setItem(carNum,9,new QTableWidgetItem(csta));
         carNum++;
     }
 }
@@ -431,7 +423,7 @@ void WorkerLogin::DealRequest()
     {
         tnum0 = tnum2;
     }
-    const QString temp = "select Uname,Ftm,allfee from RentInfo where Tnum='" + tnum0 + "'";
+    const QString temp = "select Uname,Ftm,Cash from RentInfo where Tnum='" + tnum0 + "'";
     query.exec(temp);
     if(query.next())
     {
@@ -443,13 +435,35 @@ void WorkerLogin::DealRequest()
     }
     QString csta = ui->comboBox->currentText();
     QString fine = ui->spinBox->text();
-    QString uname = query.value(0).toString();
+    QString uname = query.value(0).toString(); 
     float allfee = query.value(2).toFloat();
-    if(fine != "0")
+    if(csta == "A")
     {
-        allfee += fine.toFloat();
+        const QString temp = "select Cre from User where Uname='" + uname + "'";
+        query.exec(temp);
+        if(!query.next())
+        {
+            QMessageBox::information(this, "Tips", "对用户进行信用评级失败!", QMessageBox::Ok);
+            return;
+        }
+        QString cre = query.value(0).toString();
+        if(cre == "B")
+        {
+            const QString temp = "update User set Cre='A' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
+        else if(cre == "C")
+        {
+            const QString temp = "update User set Cre='B' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
+        else if(cre == "D")
+        {
+            const QString temp = "update User set Cre='C' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
     }
-    if(csta == "B")
+    else if(csta == "B")//根据车辆使用状况对用户进行评级
     {
         allfee *= 1.2;
     }
@@ -460,11 +474,38 @@ void WorkerLogin::DealRequest()
     else if(csta == "D")
     {
         allfee *= 2.0;
+        const QString temp = "select Cre from User where Uname='" + uname + "'";
+        query.exec(temp);
+        if(!query.next())
+        {
+            QMessageBox::information(this, "Tips", "对用户进行信用评级失败!", QMessageBox::Ok);
+            return;
+        }
+        QString cre = query.value(0).toString();
+        if(cre == "A")
+        {
+            const QString temp = "update User set Cre='B' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
+        else if(cre == "B")
+        {
+            const QString temp = "update User set Cre='C' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
+        else if(cre == "C")
+        {
+            const QString temp = "update User set Cre='D' where Uname='" + uname + "'";
+            query.exec(temp);
+        }
     }
-    //提交订单结束申请
-    const QString temp2 = "update RentInfo set Wnum='" +  Logid + "',Fine=" + fine + ",Csta='" + csta + "',AllFee=" +\
-                            QString::number(allfee,'f',2) + " where Tnum='" + tnum0 + "'";
-    qDebug()<<temp2;
+
+    //开始处理订单
+    const QString temp2 = "update RentInfo set Wnum='" +  Logid + "',Cash=" + QString::number(allfee,'f',2) + ",Fine=" + \
+                        fine + ",Csta='" + csta + "' where Tnum='" + tnum0 + "'";
+    if(fine != "0")
+    {
+        allfee += fine.toFloat();
+    }
     if(query.exec(temp2))
     {
         //结束请求，扣除用户余额
@@ -500,8 +541,7 @@ void WorkerLogin::DealRequest()
 
 void WorkerLogin::BasicShow()
 {
-    const QString temp = "select Wnum,Wname,Sex,Age,Tnum,Ctime,Ide,Bsal from Worker,WorkerSal where Worker.Wnum='" + \
-                        Logid + "' and WorkerSal.Wnum='" + Logid + "'";
+    const QString temp = "select Wnum,Wname,Sex,Age,Tnum,Ctime,Ide,Bsal from Worker where Wnum='" + Logid + "'";
     query.exec(temp);
     if(query.next())
     {
@@ -511,7 +551,7 @@ void WorkerLogin::BasicShow()
         ui->label_age->setText(query.value(3).toString());
         ui->label_tnum->setText(query.value(4).toString());
         ui->label_Ctime->setText(query.value(5).toString());
-        ui->label_Ide->setText((query.value(6).toString() == "0") ? "系统管理人员" : "普通员工");
+        ui->label_Ide->setText((query.value(6).toString() == "1") ? "系统管理人员" : "普通员工");
         ui->label_wage->setText(query.value(7).toString());
     }
     else
@@ -522,7 +562,7 @@ void WorkerLogin::BasicShow()
 
 void WorkerLogin::ChangeBasic()
 {
-    ReviseBasicInfo* w = new ReviseBasicInfo(this);
+    ReviseBasicInfo* w = new ReviseBasicInfo(this,1);
     w->exec();
     delete w;
     BasicShow();

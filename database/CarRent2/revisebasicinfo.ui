@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>修改信息</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

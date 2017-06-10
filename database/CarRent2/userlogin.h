@@ -16,18 +16,17 @@ public:
     explicit UserLogin(QWidget *parent = 0);
     ~UserLogin();
 private slots:
-    void Exit();
-
-    void CarInfo_Show();
-    void Rent();
-
-    void ShowMyOrder();
+    void Exit();  
+    void Rent();  
     void FinishOrder();
     void ReviseBasic();
     void AddMoney();
     void ChangePass();
+    void select();
 private:
     Ui::UserLogin *ui;
+    void CarInfo_Show();
+    void ShowMyOrder();
     void ShowBasic();
 };
 
