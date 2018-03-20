@@ -1,5 +1,6 @@
 #include "login.h"
 #include "main.h"
+#include <iostream>
 #include <QApplication>
 #include <QStringList>
 #include <QtSql/QSqlDatabase>
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])
     if(dbconn.open("root", "960606saandsb!"))//用户名、密码，成功返回1
     {
         qDebug("成功链接数据库...");
-        query = (QSqlQuery)dbconn;
+        query = (QSqlQuery)dbconn;//query绑定数据库操作引擎
         w.show();
     }
     else

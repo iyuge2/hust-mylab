@@ -423,7 +423,7 @@ void WorkerLogin::DealRequest()
     {
         tnum0 = tnum2;
     }
-    const QString temp = "select Uname,Ftm,Cash from RentInfo where Tnum='" + tnum0 + "'";
+    const QString temp = "select Uname,Ftm,Cash,Cnum from RentInfo where Tnum='" + tnum0 + "'";
     query.exec(temp);
     if(query.next())
     {
@@ -436,6 +436,7 @@ void WorkerLogin::DealRequest()
     QString csta = ui->comboBox->currentText();
     QString fine = ui->spinBox->text();
     QString uname = query.value(0).toString(); 
+    QString cnum = query.value(3).toString();
     float allfee = query.value(2).toFloat();
     if(csta == "A")
     {
@@ -525,7 +526,8 @@ void WorkerLogin::DealRequest()
                 }
                 int tnum = query.value(0).toInt() + 1;
                 const QString temp6 = "update Worker set Tnum=" + QString::number(tnum) + " where Wnum='" + Logid + "'";
-                if(query.exec(temp6))
+                const QString temp7 = "update CarInfo set Sta='A' where Cnum='" + cnum + "'";//更新车辆信息为空闲状态
+                if(query.exec(temp6) && query.exec(temp7))
                 {
                     QMessageBox::information(this, "Tips", "处理成功!", QMessageBox::Ok);
                 }

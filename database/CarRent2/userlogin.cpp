@@ -219,6 +219,23 @@ void UserLogin::ShowMyOrder()
         QString fee = query.value(6).toString();
         QString fine = query.value(7).toString();
         QString allFee = QString::number((fee.toFloat() + fine.toFloat()),'f',2);
+        if(ftime.isNull())
+        {
+            OrderStatus = "正在行驶中...";
+            QDateTime s1 = stime;
+            QDateTime s2 = QDateTime::currentDateTime();
+            float ree = 0;
+            const QString temp2 = "select Ree from CarInfo where Cnum='" + cnum + "'";
+            QSqlQuery query2 = query;
+            query2.exec(temp2);
+            if(query2.next())
+            {
+                ree = query2.value(0).toFloat();
+            }
+            ree = ree * (s2.toTime_t() - s1.toTime_t()) / 3600.0;
+            fee = QString::number(ree,'f',2);
+            allFee = fee;
+        }
         ui->tableWidget_2->setItem(carNum,0,new QTableWidgetItem(tnum));
         ui->tableWidget_2->setItem(carNum,1,new QTableWidgetItem(OrderStatus));
         ui->tableWidget_2->setItem(carNum,2,new QTableWidgetItem(cnum));

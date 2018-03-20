@@ -136,7 +136,7 @@ void AddCarInfo::Ok()
     }
     if(AddOrRev)
     {//执行update
-        if(CarNum != cnum)
+        if(CarNum != cnum)//判断车牌号是否被修改
         {
             const QString temp = "select Cnum from CarInfo where Cnum='" + cnum + "'";
             query.exec(temp);

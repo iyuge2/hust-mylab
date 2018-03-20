@@ -193,18 +193,15 @@ void SysLogin::DelCar()
         QMessageBox::information(this, "Tips", "不存在该车编号!", QMessageBox::Ok);
         return;
     }
-    if(QMessageBox::question(this,"question","确定删除这条车辆信息吗?",QMessageBox::Yes|QMessageBox::No))
+    const QString temp2 = "delete from CarInfo where Cnum='" + cnum0 + "'";
+    if(query.exec(temp2))
     {
-        const QString temp2 = "delete from CarInfo where Cnum='" + cnum0 + "'";
-        if(query.exec(temp2))
-        {
-            QMessageBox::information(this, "Tips", "删除成功!", QMessageBox::Ok);
-            CarInfo_Show();
-        }
-        else
-        {
-            QMessageBox::information(this, "Tips", "删除失败!", QMessageBox::Ok);
-        }
+        QMessageBox::information(this, "Tips", "删除成功!", QMessageBox::Ok);
+        CarInfo_Show();
+    }
+    else
+    {
+        QMessageBox::information(this, "Tips", "删除失败!", QMessageBox::Ok);
     }
 }
 
@@ -605,8 +602,8 @@ void SysLogin::QueryMoney()
             ui->tableWidget_C->setItem(carNum,1,new QTableWidgetItem(time.toString()));
             ui->tableWidget_C->setItem(carNum,2,new QTableWidgetItem(cash));
             cashAll += cash.toFloat();
+            carNum += 1;
         }
-        carNum += 1;
     }
     ui->label_OrderCount->setText(QString::number(carNum));
     ui->label_OrderFee->setText(QString::number(cashAll,'f',2));

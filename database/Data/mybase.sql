@@ -56,3 +56,23 @@ insert into Worker values('iyuge2','W201414775','960606','M',24,0,'2000-10-1 08:
 insert into Worker values('sys1','W000000000','W000000000','M',24,0,'2000-10-1 08:30:00',1,0);
 insert into Worker values('sys2','W000000001','W000000001','M',24,0,'2000-10-1 08:30:00',1,0);
 insert into User values('U000000','U000000','M',0,'A',0);
+/*设置触发器*/
+use CarRentSys;
+delimiter $$
+create trigger DeleteUser before delete on User
+for each row
+begin
+    update RentInfo set Uname='U000000' where RentInfo.Uname = old.Uname;
+end
+$$
+delimiter ;
+
+delimiter $$
+create trigger DeleteWorker before delete on Worker
+for each row
+begin
+    update RentInfo set Wnum='W000000001' where Wnum=old.Wnum;
+    delete from WorkerSal where WorkerSal.Wnum=old.Wnum;
+end
+$$
+delimiter ;
